@@ -6,6 +6,7 @@
     "string.h": "c",
     "stdbool.h": "c",
     "iostream": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "game.h": "c"
   }
 }

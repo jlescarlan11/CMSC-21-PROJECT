@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <time.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include <conio.h>
 #include <windows.h>
-#include <mmsystem.h>
 
 #include "game.h"
 
