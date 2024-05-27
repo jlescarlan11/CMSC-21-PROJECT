@@ -4,6 +4,8 @@
     "graphics.h": "c",
     "windows.h": "c",
     "string.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "iostream": "cpp",
+    "ostream": "cpp"
   }
 }

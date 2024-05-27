@@ -116,8 +116,8 @@ void writeScore(char *name, int score) {
 }
 
 void printTopScores(Score scores[], int numScores, int n) {
-    printf("\n");
-    
+    puts(separator);
+    printf("\n\n");
     center_item(53);
     printf("\033[0;36m----TOP 3 SCORERS----------------------------------\033[0m\n");
 
@@ -153,6 +153,11 @@ void printTopScores(Score scores[], int numScores, int n) {
 
     center_item(53);
     printf("\033[0;36m---------------------------------------------------\033[0m\n");
+    printf("\n\n");
+    puts(separator);
+    center_item(19);
+    printf("PRESS 1 TO GO BACK\n");
+    puts(separator);
 }
 
 
