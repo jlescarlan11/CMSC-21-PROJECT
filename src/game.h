@@ -14,6 +14,8 @@
 #define MAX_POWERUPS 3
 #define TOTAL_POWERUPS 5
 
+#define MAX_NAME_LENGTH 10
+
 enum Difficulty {
     EASY,
     AVERAGE,

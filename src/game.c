@@ -352,23 +352,26 @@ void add_powerup(Game* game, const Powerup* powerUp) {
     game->num_powerups++;
 }
 
+void clear_screen() {
+    printf("\033[2J\033[H");
+}
+
 void init_player(Game* game) {
-    system("cls");
+    clear_screen();
 
     printf("\n");
-    center_item(41);
+    center_item(strlen("BEFORE WE START, PLEASE ENTER YOUR NAME"));
     printf("BEFORE WE START, PLEASE ENTER YOUR NAME\n");
-    center_item(23);
+    center_item(strlen("PRESS [ENTER] IF DONE"));
     printf("PRESS [ENTER] IF DONE\n");
     printf("\n");
-    center_item(13);
+    center_item(strlen("-----------"));
     printf("-----------\n");
-    center_item(14);
+    center_item(strlen("-----------"));
     printf("|\e[0;36m ");
 
-
-    game->player.name = malloc(11 * sizeof(char));
-    scanf("%10s", game->player.name);
+    game->player.name = malloc((MAX_NAME_LENGTH + 1) * sizeof(char)); // Allocate memory for name
+    scanf("%10s", game->player.name); 
     printf("\033[0m");
 
     for (int i = 0; game->player.name[i]; i++) {
@@ -378,42 +381,43 @@ void init_player(Game* game) {
     game->player.score = 0;
     game->player.lives = 3;
 
-    for (int i = 0; i < 5; i++) {
-        game->clicked_powerup[i] = 0;
-        game->used_powerup[i] = 0;
-    }
-
+    memset(game->clicked_powerup, 0, sizeof(game->clicked_powerup));
+    memset(game->used_powerup, 0, sizeof(game->used_powerup));
 }
 
 void confirm_name(Game* game) {
-    system("cls");
+    clear_screen();
+
     printf("\n");
-    center_item(54 + strlen(game->player.name));
+    center_item(strlen("IS [\033[0;36m%s\033[0m] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n") + strlen(game->player.name));
     printf("IS [\033[0;36m%s\033[0m] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n", game->player.name);
-    center_item(18);
+    center_item(strlen("(1) YES    (2) NO\n"));
     printf("(1) YES    (2) NO\n");
 }
 
 void center_item(int size) {
-    for(int j = size/2; j < 55; j++) {
-        printf(" ");
+    int spaces = 55 - size / 2;
+    if (spaces > 0) {
+        printf("%*s", spaces, "");  
     }
 }
 
 void add_spaces(int size, int max_size) {
-    for (int j = size; j < max_size; j++) {
-        printf(" ");
+    int spaces = max_size - size;
+    if (spaces > 0) {
+        printf("%*s", spaces, "");  
     }
-    return;
 }
 
 void init_difficulty(Game* game) { 
-    if (game->player.score < 1000) {
+    int score = game->player.score;
+
+    if (score < 1000) {
         game->difficulty = EASY;
-    } else if (game->player.score >= 1000 && game->player.score < 3500) {
-       game->difficulty = AVERAGE;
-    } else if (game->player.score >= 5000) {
-       game->difficulty = DIFFICULT;
+    } else if (score < 3500) {
+        game->difficulty = AVERAGE;
+    } else {
+        game->difficulty = DIFFICULT;
     }
 }
 
