@@ -99,11 +99,12 @@ bool used_average_category[10] = {false};
 bool used_hard_category[10] = {false};
 
 int cat_flg1 = 0, cat_flg2 = 0, cat_flg3 = 0;
+int cht1 = 0, cht2 = 0;
 int opt[4] = {'A', 'B', 'C', 'D'};
 int used_powerup[3] = {0};
 
 void writeScore(char *name, int score) {
-    FILE *file = fopen("scores.txt", "a");
+    FILE *file = fopen("assets/scores.txt", "a");
     if (file == NULL) {
         printf("Error opening file for writing.\n");
         return;
@@ -115,8 +116,10 @@ void writeScore(char *name, int score) {
 }
 
 void printTopScores(Score scores[], int numScores, int n) {
+    printf("\n");
+    
     center_item(53);
-    printf("----TOP 3 SCORERS----------------------------------\n");
+    printf("\033[0;36m----TOP 3 SCORERS----------------------------------\033[0m\n");
 
     center_item(45);
     printf("RANK");
@@ -125,7 +128,7 @@ void printTopScores(Score scores[], int numScores, int n) {
     add_spaces(strlen("NAME"), 20);
     printf("SCORE\n");
     center_item(53);
-    printf("---------------------------------------------------\n");
+    printf("\033[0;36m---------------------------------------------------\033[0m\n");
 
     center_item(45);
     printf("[1]");
@@ -149,14 +152,14 @@ void printTopScores(Score scores[], int numScores, int n) {
     printf("%d\n", scores[2].score);
 
     center_item(53);
-    printf("---------------------------------------------------\n");
+    printf("\033[0;36m---------------------------------------------------\033[0m\n");
 }
 
 
 void readScore(Score **scores, int *numScores) {
     char names[100];
     int score;
-    FILE *file = fopen("scores.txt", "r");
+    FILE *file = fopen("assets/scores.txt", "r");
     if (file == NULL) {
         printf("Error opening file for reading.\n");
         return;
@@ -227,7 +230,7 @@ void init_contents(Game* game) {
         {"EASY", "SCIENCE", "WHAT IS THE LARGEST INTERNAL ORGAN OF THE HUMAN BODY?", {"LUNGS", "STOMACH", "LIVER", "LARGE INTESTINE"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "WHAT KIND OF ENERGY DOES FOOD HAVE?", {"MECHANICAL ENERGY", "CHEMICAL ENERGY", "KINETIC ENERGY", "HEAT ENERGY"}, {"B", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "WHAT IS THE ELECTRIC CHARGE OF A NEUTRON?", {"POSITIVE", "NEGATIVE", "NO CHARGE", "NONE OF THE ABOVE"}, {"C", "\0", "\0", "\0"}},
-        {"EASY", "SCIENCE", "WHAT IS THE POWERHOUSE OF THE CELL?", {"MITHOCONDRIA", "MITOCHONDRIA", "MITOCONDREA", "MITHOCONDREIA"}, {"B", "\0", "\0", "\0"}},
+        {"EASY", "SCIENCE", "WHAT IS THE POWERHOUSE OF THE CELL?", {"MITHOCONDRIA", "MITOCHONDRION", "MITOCONDREA", "MITHOCONDREIA"}, {"B", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "WHAT DOES A CONCHOLOGIST COLLECT?", {"CONCH SHELLS", "MOLLUSC SHELLS", "SEASHELLS", "CRAB SHELLS"}, {"B", "\0", "\0", "\0"}},
         
         {"EASY", "COMPUTER SCIENCE", "WHAT IS THE NAME OF THE FIRST COMPUTER?", {"ENIAC", "ENC", "ENAC", "CCSC"}, {"A", "\0", "\0", "\0"}},
@@ -422,7 +425,8 @@ void add_powerup(Game* game, const Powerup* powerUp) {
 void init_player(Game* game) {
     system("cls");
 
-    center_item(41); //40 here is the size of the text that will be printed below."
+    printf("\n");
+    center_item(41);
     printf("BEFORE WE START, PLEASE ENTER YOUR NAME\n");
     center_item(23);
     printf("PRESS [ENTER] IF DONE\n");
@@ -430,10 +434,12 @@ void init_player(Game* game) {
     center_item(13);
     printf("-----------\n");
     center_item(14);
-    printf("| ");
+    printf("|\e[0;36m ");
+
 
     game->player.name = malloc(11 * sizeof(char));
     scanf("%10s", game->player.name);
+    printf("\033[0m");
 
     for (int i = 0; game->player.name[i]; i++) {
         game->player.name[i] = toupper(game->player.name[i]);
@@ -451,8 +457,9 @@ void init_player(Game* game) {
 
 void confirm_name(Game* game) {
     system("cls");
+    printf("\n");
     center_item(54 + strlen(game->player.name));
-    printf("IS [%s] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n", game->player.name);
+    printf("IS [\033[0;36m%s\033[0m] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n", game->player.name);
     center_item(18);
     printf("(1) YES    (2) NO\n");
 }
@@ -498,15 +505,19 @@ int choose_category(Game* game) {
     system("cls");
 
     if (game->difficulty != DIFFICULT) {
-        printf(cat_easy_average, game->difficulty == EASY ? 3000 : 5000, game->difficulty == 0 ? "EASY" : "AVERAGE");
-        getch();
+        printf(cat_easy_average, game->difficulty == EASY ? 1000 : 5000, game->difficulty == 0 ? "EASY" : "AVERAGE");
     } else {
         printf(cat_hard);
-        getch();
     }
+
+    char input = '0';
+    do {
+        input = getch();
+    } while (input != '1');
 
     system("cls");
 
+    printf("\n");
     center_item(26);
     printf("PLEASE CHOOSE A CATEGORY\n");
 
@@ -517,18 +528,21 @@ int choose_category(Game* game) {
             } else if (cat_flg1 == 1) {
                 cat_index[i] = cat_index[4];
             }
+            cat_flg1++;
         } else if ((game->difficulty == AVERAGE) && (used_average_category[cat_index[i]]) && (cat_flg1 < 2)) {
             if (cat_flg2 == 0) {
                 cat_index[i] = cat_index[3];
             } else if (cat_flg2 == 1) {
                 cat_index[i] = cat_index[4];
             }
+            cat_flg2++;
         } else if ((game->difficulty == DIFFICULT) && (used_hard_category[cat_index[i]]) && (cat_flg1 < 2)) {
             if (cat_flg3 == 0) {
                 cat_index[i] = cat_index[3];
             } else if (cat_flg3 == 1) {
                 cat_index[i] = cat_index[4];
             }
+            cat_flg2++;
         }
     }
 
@@ -537,7 +551,7 @@ int choose_category(Game* game) {
         if (game->difficulty == EASY) {
             if (!(used_easy_category[cat_index[i]])) {
                 center_item(56);
-                printf("------------------------------------------------------\n");
+                printf("\033[0;36m------------------------------------------------------\033[0m\n");
                 printf("\t\t\t   (%d)\n", i + 1);
                 int size = strlen(game->quizzes[cat_index[i]].category);
                 center_item(size);
@@ -546,7 +560,7 @@ int choose_category(Game* game) {
         } else if (game->difficulty == AVERAGE) {
             if (!(used_average_category[cat_index[i]])) {
                 center_item(56);
-                printf("------------------------------------------------------\n");
+                printf("\033[0;36m------------------------------------------------------\033[0m\n");
                 printf("\t\t\t   (%d)\n", i + 1);
                 int size = strlen(game->quizzes[cat_index[i]].category);
                 center_item(size);
@@ -555,7 +569,7 @@ int choose_category(Game* game) {
         } else if (game->difficulty == DIFFICULT) {
             if (!(used_hard_category[cat_index[i]])) {
                 center_item(56);
-                printf("------------------------------------------------------\n");
+                printf("\033[0;36m------------------------------------------------------\033[0m\n");
                 printf("\t\t\t   (%d)\n", i + 1);
                 int size = strlen(game->quizzes[cat_index[i]].category);
                 center_item(size);
@@ -564,9 +578,9 @@ int choose_category(Game* game) {
         }
     }
     center_item(56);
-    printf("------------------------------------------------------\n");
+    printf("\033[0;36m------------------------------------------------------\033[0m\n");
 
-    char input = '0'; 
+    input = '0'; 
     do {
         input = getch();
     } while ((input < '1') && (input > '3'));
@@ -601,16 +615,18 @@ int is_duplicate(int *array, int size, int value) {
 
 void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int *used_powerup) {
     for (int i = 0; i < 10; i++) {
-
         int del_index = rand() % 4;
 
         int opt_index[MAX_OPTIONS];
         init_index(opt_index, MAX_OPTIONS, TOTAL_OPTIONS, 1);
 
         int time_left = init_timer(game), answer_chosen = 0; 
-
+        int ctr = 0;
         while (time_left && !answer_chosen) {
-
+            if (ctr % 30 == 0) {
+                PlaySound(TEXT("assets/play.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            }
+            ctr++;
             if(!(game->clicked_powerup[3]) && (game->used_powerup[3])) {
                 int temp = que_index[i];
                 que_index[i] = que_index[9];
@@ -654,29 +670,71 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
             printf("\n\n");
 
             if(!(game->clicked_powerup[1]) && (game->used_powerup[1])) {
-                for(int j = 0; j < 4; j++) {
-                    while(del_index == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
-                        del_index = rand() % 4;
-                    } 
-                    if(opt_index[j] != del_index) {
+                if (cht1) {
+                    for(int j = 0; j < 4; j++) {
+                        while(del_index == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
+                            del_index = rand() % 4;
+                        } 
+                        if(opt_index[j] != del_index) {
+                            if(opt_index[j] == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
+                                center_item(56);
+                                printf("\033[0;36m------------------------------------------------------\033[0m\n");
+                                printf("\t\t\t   \033[0;32m(%c)\n", 'A' + j);
+                                center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
+                                printf("%s\033[0m\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                            } else {
+                                center_item(56);
+                                printf("\033[0;36m------------------------------------------------------\033[0m\n");
+                                printf("\t\t\t   \033[0;31m(%c)\n", 'A' + j);
+                                center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
+                                printf("%s\033[0m\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                            }
+                        }
+                    }
+
+                } else {
+                    for(int j = 0; j < 4; j++) {
+                        while(del_index == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
+                            del_index = rand() % 4;
+                        } 
+                        if(opt_index[j] != del_index) {
+                            center_item(56);
+                            printf("\033[0;36m------------------------------------------------------\033[0m\n");
+                            printf("\t\t\t   (%c)\n", 'A' + j);
+                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
+                            printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                        }
+                    }
+                }
+            } else {
+                if (cht1) {
+                    for(int j = 0; j < 4; j++) {
+                        if(opt_index[j] == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
+                            center_item(56);
+                            printf("\033[0;36m------------------------------------------------------\033[0m\n");
+                            printf("\t\t\t   \033[0;32m(%c)\n", 'A' + j);
+                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
+                            printf("%s\033[0m\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                        } else {
+                            center_item(56);
+                            printf("\033[0;36m------------------------------------------------------\033[0m\n");
+                            printf("\t\t\t   \033[0;31m(%c)\n", 'A' + j);
+                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
+                            printf("%s\033[0m\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                        }
+                    }
+                } else {
+                    for(int j = 0; j < 4; j++) {
                         center_item(56);
-                        printf("------------------------------------------------------\n");
+                        printf("\033[0;36m------------------------------------------------------\033[0m\n");
                         printf("\t\t\t   (%c)\n", 'A' + j);
                         center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
                         printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
                     }
                 }
-            } else {
-                for(int j = 0; j < 4; j++) {
-                    center_item(56);
-                    printf("------------------------------------------------------\n");
-                    printf("\t\t\t   (%c)\n", 'A' + j);
-                    center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                    printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
-                }
             }
             center_item(56);
-            printf("------------------------------------------------------\n\n");
+            printf("\033[0;36m------------------------------------------------------\033[0m\n\n");
             puts(separator);
 
             size = 0;
@@ -711,6 +769,7 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                     }
 
                     if(is_correctanswer(answer, game->quizzes[que_index[i] + start_index])) {
+                        PlaySound(TEXT("assets/correct.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         system("COLOR A0");
 
                         if(!(game->clicked_powerup[2]) && (game->used_powerup[2])) {
@@ -730,6 +789,7 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                         answer_chosen = 1;
                     } else {
                         system("COLOR 40");
+                        PlaySound(TEXT("assets/wrong.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
                         if (!(game->clicked_powerup[2]) && (game->used_powerup[2])) {
                             game->player.score *= 0;
@@ -750,12 +810,39 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                     } else if (user_answer == '3') {
                         game->used_powerup[pow_index[2]] = 1;  
                     }
+                } else if (user_answer == 1) {
+                    PlaySound(NULL, 0, 0);
+                    system("cls");
+                    printf("Enter cheat code: ");
+                    char cheat[20];
+                    scanf("%19s", cheat);
+
+                    for (int i = 0; cheat[i] != '\0'; i++) {
+                        cheat[i] = toupper((unsigned char)cheat[i]);
+                    }
+                    
+                    if (strcmp(cheat, "CLAIRVOYANCE") == 0) {
+                        cht1 = 1;
+                        printf("CLAIRVOYANCE ACTIVATED. CLICK ANY KEY TO CONTINUE.");
+                        getch();
+                    } else if (strcmp(cheat, "TIMEPAUSE") == 0) {
+                        cht2 = 1;
+                        printf("TIMEPAUSE ACTIVATED. CLICK ANY KEY TO CONTINUE");
+                        getch();
+                    } else if (strcmp(cheat, "DEACTIVATE") == 0) {
+                        cht1 = 0, cht2 = 0;
+                        printf("Cheats deactivated. Click any key to continue.");
+                        getch();
+                    }
+                    PlaySound(TEXT("assets/play.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                    continue;                     
                 }
+
             }
 
             Sleep(1000);
 
-            if (!(game->clicked_powerup[0]) && (game->used_powerup[0])) {
+            if ((!(game->clicked_powerup[0]) && (game->used_powerup[0])) || cht2) {
                 time_left;
             } else {
                 time_left--;

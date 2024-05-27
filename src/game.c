@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <conio.h>
 #include <windows.h>
+#include <mmsystem.h>
 
 #include "game.h"
 #include "graphics.h"
@@ -22,6 +23,7 @@ int main() {
         system("cls");
 
         puts(title_screen);
+        PlaySound(TEXT("assets/intro.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
         char input;
         do {
@@ -36,7 +38,9 @@ int main() {
         {
         case '1':
             system("cls");
+            printf("\n");
             center_item(29);
+            PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
             printf("DO YOU REALLY WANT TO PLAY?\n\n");
             center_item(19);
             printf("[1] YES    [2] NO\n");
@@ -79,12 +83,13 @@ int main() {
 
                 init_difficulty(&game);
 
-
+                PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 int cat_index = choose_category(&game);
 
                 play_quiz(&game, cat_index, que_index, pow_index, used_powerup);
 
                 if (game.player.lives == 0) {
+                    PlaySound(TEXT("assets/lose.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     writeScore(game.player.name, game.player.score);
 
                     
@@ -119,6 +124,7 @@ int main() {
             break;
 
             case '2':
+                PlaySound(TEXT("assets/play.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 system("cls");
                 puts(about_screen);
             
@@ -130,6 +136,7 @@ int main() {
             break;
 
             case '3':
+                PlaySound(TEXT("assets/leaderboard.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 system("cls");
 
                 int num_scores = 0;
