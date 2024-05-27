@@ -49,6 +49,7 @@ int main() {
                 goto start;
             }
             play:
+            PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
             do {
                 init_player(&game);
                 input = '0';
