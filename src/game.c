@@ -86,6 +86,8 @@ int main() {
                 PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 int cat_index = choose_category(&game);
 
+                markCategoryAsUsed(cat_index, &game);
+
                 play_quiz(&game, cat_index, que_index, pow_index, used_powerup);
 
                 if (game.player.lives == 0) {

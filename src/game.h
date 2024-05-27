@@ -80,6 +80,7 @@ void play_quiz(Game* game, int start_index, int *que_index, int *p_index, int *u
 int init_timer(Game* game);
 void init_difficulty(Game* game);
 int choose_category(Game* game);
+void markCategoryAsUsed(int categoryIndex, Game* game);
 void init_index(int *array, int size, int modulo, int multiple);
 int is_duplicate(int *array, int size, int value);
 int is_correctanswer(char user_answer, Quiz quiz);
@@ -393,6 +394,20 @@ void init_contents(Game* game) {
     for (int i = 0; i < num_powerups; i++) {
         Powerup new_powerup = create_powerup(powerup_data[i].name, powerup_data[i].description);
         add_powerup(game, &new_powerup);
+    }
+}
+
+void markCategoryAsUsed(int categoryIndex, Game* game) {
+    switch (game->difficulty) {
+        case EASY:
+            used_easy_category[categoryIndex] = true;
+            break;
+        case AVERAGE:
+            used_average_category[categoryIndex] = true;
+            break;
+        case DIFFICULT:
+            used_hard_category[categoryIndex] = true;
+            break;
     }
 }
 
