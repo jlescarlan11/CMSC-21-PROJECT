@@ -389,7 +389,7 @@ void confirm_name(Game* game) {
     clear_screen();
 
     printf("\n");
-    center_item(strlen("IS [\033[0;36m%s\033[0m] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n") + strlen(game->player.name));
+    center_item(strlen("IS  THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n") + strlen(game->player.name));
     printf("IS [\033[0;36m%s\033[0m] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n", game->player.name);
     center_item(strlen("(1) YES    (2) NO\n"));
     printf("(1) YES    (2) NO\n");

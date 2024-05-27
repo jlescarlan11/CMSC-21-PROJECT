@@ -49,11 +49,12 @@ int main() {
                 goto start;
             }
             play:
-            PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
             do {
+                PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 init_player(&game);
                 input = '0';
                 do {
+                    PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     confirm_name(&game);
                     input = getch();
                 } while (input != '1' && input != '2');
@@ -61,6 +62,7 @@ int main() {
             } while (input == '2');
 
             system("cls");
+            PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
             printf(welcome_screen, game.player.name);
 
             input = '0';
