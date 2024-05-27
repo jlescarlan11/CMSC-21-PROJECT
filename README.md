@@ -1,2 +1,3 @@
 To build:
-gcc game.c -o game
+1) cd "pathfile of src"
+2) gcc -o game game.c -lwinmm
