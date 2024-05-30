@@ -7,6 +7,7 @@
 int cat_flg1 = 0, cat_flg2 = 0, cat_flg3 = 0;
 int cht1 = 0, cht2 = 0;
 int opt[4] = {'A', 'B', 'C', 'D'};
+int dif1 = 0, dif2 = 0, dif3 = 0;
 
 bool used_easy_category[10] = {false};
 bool used_average_category[10] = {false};
@@ -29,6 +30,8 @@ void writeScore(char *name, int score) {
 void printTopScores(Score scores[], int numScores, int n) {
     puts(separator);
     printf("\n\n");
+    puts(leaderboards);
+    printf("\n");
     center_item(53);
     printf("\033[0;36m----TOP 3 SCORERS----------------------------------\033[0m\n");
 
@@ -137,7 +140,7 @@ void init_contents(Game* game) {
         {"EASY", "MATHEMATICS", "WHAT IS THE ONLY NUMBER THAT IS SPELLED IN DESCENDING ORDER (Z-A)?", {"3", "6", "10", "1"}, {"D", "\0", "\0", "\0"}},
         {"EASY", "MATHEMATICS", "WHAT IS THE LONGEST SIDE OF A TRIANGLE CALLED?", {"HYPOTENUSE", "BASE", "VERTICES", "HYPOTEMUSE"}, {"A", "\0", "\0", "\0"}},
         {"EASY", "MATHEMATICS", "WHICH OF THE FOLLOWING POSITIVE INTEGER IS BOTH A PERFECT SQUARE AND A PERFECT CUBE?", {"16", "125", "64", "81"}, {"C", "\0", "\0", "\0"}},
-        
+
         {"EASY", "SCIENCE", "BRONZE, IS AN ALLOY MADE UP OF TWO ELEMENTS. WHAT ARE THE TWO ELEMENTS THAT IS COMMONLY USED IN THE FORMATION OF BRONZE?", {"COPPER AND ZINC", "ALUMINUM AND NICKEL", "COPPER AND TIN", "PHOSPHORUS AND TIN"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "HOW MANY BONES DO SHARK HAVE?", {"0", "108", "10", "1"}, {"A", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "RAINBOWS ARE FORMED DUE TO WHAT PROCESS OF LIGHT?", {"REFRACTION", "REFLECTION", "DISPERSION", "ABSORPTION"}, {"A", "\0", "\0", "\0"}},
@@ -148,7 +151,7 @@ void init_contents(Game* game) {
         {"EASY", "SCIENCE", "WHAT IS THE ELECTRIC CHARGE OF A NEUTRON?", {"POSITIVE", "NEGATIVE", "NO CHARGE", "NONE OF THE ABOVE"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "WHAT IS THE POWERHOUSE OF THE CELL?", {"MITHOCONDRIA", "MITOCHONDRION", "MITOCONDREA", "MITHOCONDREIA"}, {"B", "\0", "\0", "\0"}},
         {"EASY", "SCIENCE", "WHAT DOES A CONCHOLOGIST COLLECT?", {"CONCH SHELLS", "MOLLUSC SHELLS", "SEASHELLS", "CRAB SHELLS"}, {"B", "\0", "\0", "\0"}},
-        
+
         {"EASY", "COMPUTER SCIENCE", "WHAT IS THE NAME OF THE FIRST COMPUTER?", {"ENIAC", "ENC", "ENAC", "CCSC"}, {"A", "\0", "\0", "\0"}},
         {"EASY", "COMPUTER SCIENCE", "WHAT DOES HTML STAND FOR?", {"HYPERTEXT MIX LANGUAGE", "HOGS TACKLING MIGHTY LIONS.", "HOW TO LOVE ME", "HYPERTEXT MARKUP LANGUAGE"}, {"D", "\0", "\0", "\0"}},
         {"EASY", "COMPUTER SCIENCE", "WHICH IS OLDER?", {"C", "C++", "FORTRAN", "PYTHON"}, {"C", "\0", "\0", "\0"}},
@@ -159,7 +162,7 @@ void init_contents(Game* game) {
         {"EASY", "COMPUTER SCIENCE", "WHICH OF THE FOLLOWING IS A TYPE OF MALWARE?", {"WIGGLES", "WORMIES", "HORSES", "TROJANS"}, {"D", "\0", "\0", "\0"}},
         {"EASY", "COMPUTER SCIENCE", "WHAT IS THE SMALLEST UNIT OF DIGITAL IMAGE?", {"BYTES", "BIT", "PIXEL", "ARRAY"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "COMPUTER SCIENCE", "WHAT DOES GPU STAND FOR?", {"GENERAL PROCESSING UNIT", "GRAPHICS IMAGE UNIT", "GENERAL IMAGE UNIT", "GRAPHICS PROCESSING UNIT"}, {"D", "\0", "\0", "\0"}},
-        
+
         {"EASY", "GEOGRAPHY", "WHAT IS THE CAPITAL CITY OF INDONESIA?", {"JAKARTA", "KUALA LUMPUR", "JAYAPURA", "YOGYAKARTA"}, {"A", "\0", "\0", "\0"}},
         {"EASY", "GEOGRAPHY", "WHAT IS THE CAPITAL OF SOUTH COTABATO?", {"GENERAL SANTOS", "KORONODAL", "KIDAPAWAN", "MARAWI"}, {"B", "\0", "\0", "\0"}},
         {"EASY", "GEOGRAPHY", "WHAT IS THE SMALLEST CONTINENT BY AREA?", {"ASIA", "AUSTRALIA AND OCEANIA", "EUROPE", "NORTH AMERICA"}, {"B", "\0", "\0", "\0"}},
@@ -169,25 +172,25 @@ void init_contents(Game* game) {
         {"EASY", "GEOGRAPHY", "WHAT IS THE OLDEST CITY OF THE PHILIPPINES?", {"QUEZON CITY", "BAGUIO CITY", "CEBU CITY", "DAVAO CITY"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "GEOGRAPHY", "WHAT IS THE HIGHEST PEAK IN THE PHILIPPINES?", {"OSMENA PEAK", "MT. PINATUBO", "MT. APO", "STARBUKS"}, {"C", "\0", "\0", "\0"}},
         {"EASY", "GEOGRAPHY", "WHICH OF THE FOLLOWING BORDERS CHINA?", {"MONGOLIA", "THAILAND", "MALAYSIA", "INDONESIA"}, {"A", "\0", "\0", "\0"}},
-        {"EASY", "GEOGRAPHY", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}},      
-        
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}},      
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}}, 
-        {"EASY", "dummy1", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}},
-        
+        {"EASY", "GEOGRAPHY", "WHAT IS THE LONGEST RIVER IN THE PHILIPPINES?", {"PASIG RIVER", "CAGAYAN RIVER", "PAMPANGA RIVER", "AGUSAN RIVER"}, {"B", "\0", "\0", "\0"}},
+
+        {"EASY", "HISTORY AND LITERATURE", "WHO IS THE FIRST PRESIDENT OF THE PHILIPPINES?", {"JOSE P. LAUREL", "MANUEL L. QUEZON", "SERGIO OSMENA", "EMILIO AGUINALDO"}, {"D", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "IN WHICH YEAR DID THE PHILIPPINES GAIN INDEPENDENCE FROM SPAIN?", {"1898", "1899", "1897", "1896"}, {"A", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHO IS KNOWN AS THE MOTHER OF THE PHILIPPINE REVOLUTION?", {"KRIS AQUINO", "GABRIELA SILANG", "MELCHORA AQUINO", "IMELDA MARCOS"}, {"C", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHO WROTE ROMEO AND JULIET?", {"WILLIAM SHAKESPEARE", "J.K ROWLING", "MARK TWAIN", "CHARLES DICKENS"}, {"A", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "IN WHAT YEAR DID THE SPANIARDS REACH THE PHILIPPINE ISLANDS?", {"1521", "1522", "1523", "1520"}, {"A", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHAT IS THE NAME OF THE MOTHER OF JOSE RIZAL?", {"MARIA", "TEODORA", "ALONZA", "LOLITA"}, {"B", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHO COMPLETED THE VOYAGE OF MAGELLAN AFTER HE DIED IN THE BATTLE OF MACTAN?", {"JUAN SEBASTIAN ELCANO", "RUY DE VILLALOBOS", "VASCO DE GAMA", "BERNARDO DE LA TORRE"}, {"A", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHICH OF THE FOLLOWING IS CONSIDERED AS THE FOUNDATIONAL NOVEL OF THE PHILIPPINES?", {"EL FILIBUSTERISMO", "NOLI ME TANGERE", "FLORANTE AT LAURA", "IBONG ADARNA"}, {"B", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "WHAT COUNTRY GIFTED THE STATUE OF LIBERTY TO THE UNITED STATES?", {"UNITED KINGDOM", "GERMANY", "FRANCE", "RUSSIA"}, {"C", "\0", "\0", "\0"}},
+        {"EASY", "HISTORY AND LITERATURE", "THE ADVENTURES OF TOM SAWYER WAS WRITTEN BY WHICH AMERICAN AUTHOR?", {"ERNEST HEMINGWAY", "NATHANIEL HAWTHORNE", "OLIVIA CLEMENS", "MARK TWAIN"}, {"D", "\0", "\0", "\0"}},
+
         {"AVERAGE", "MATHEMATICS", "A GOOGOL IS 10 TO THE 100TH POWER. HOW MANY ZEROES DOES IT HAVE?", {"100", "1000", "10000", "100000"}, {"A", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "6 IS THE SMALLEST PERFECT NUMBER, WHAT IS THE NEXT PERFECT NUMBER?", {"16", "24", "36", "28"}, {"D", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "WHAT BRANCH OF MATHEMATICS DEALS WITH THE STUDY OF CONTINUOUS CHANGE?", {"CALCULUS", "STATISTICS", "ANALYSIS", "ALGEBRA"}, {"A", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "WHICH OF THE FOLLOWING IS EQUIVALENT TO THE STATEMENT, [IF I WILL STUDY TODAY, THEN I WILL PASS THE EXAM.]", {"IF I STUDY TODAY, THEN I WILL NOT PASS THE EXAM.", "I WILL NOT STUDY TODAY AND I WILL NOT PASS THE EXAM.", "I WILL NOT STUDY TODAY OR I WILL PASS THE EXAM", "IF I WILL NOT STUDY TODAY, THEN I WILL PASS THE EXAM."}, {"C", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "A CIRCLE HAS AN AREA OF 144, WHAT IS THE RADIUS OF THE CIRCLE?", {"10", "13", "11", "12"}, {"D", "\0", "\0", "\0"}},
-        {"AVERAGE", "MATHEMATICS", "WHAT IS THE ONLY NUMBER THAT IS TWICE THE SUM OF ITS DIGITS?", {"16", "17", "18", "19"}, {"C", "\0", "\0", "\0"}}, 
+        {"AVERAGE", "MATHEMATICS", "WHAT IS THE ONLY NUMBER THAT IS TWICE THE SUM OF ITS DIGITS?", {"16", "17", "18", "19"}, {"C", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "THE NUMBER ZERO WAS ORIGINALLY CALLED WHAT?", {"ZERO", "NOTHING", "CIPHER", "WE DON'T KNOW EITHER"}, {"C", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "WHAT IS THE TERM FOR THE 1/100TH OF A SECOND?", {"FLASHY", "JIFFY", "NANOSECOND", "MILLISECOND"}, {"B", "\0", "\0", "\0"}},
         {"AVERAGE", "MATHEMATICS", "WHAT IS A NANOSECOND?", {"ONE MILLIONTH OF A SECOND.", "ONE BILLIONTH OF A SECOND", "ONE THOUSANDTH OF A SECOND", "ONE TRILLIONTH OF A SECOND"}, {"B", "\0", "\0", "\0"}},
@@ -226,49 +229,71 @@ void init_contents(Game* game) {
         {"AVERAGE", "GEOGRAPHY", "WHICH OF THE FOLLOWING CITIES IS THE MOST POPOLOUS?", {"SHANGHAI", "BEIJING", "TOKYO", "DELHI"}, {"C", "\0", "\0", "\0"}},
         {"AVERAGE", "GEOGRAPHY", "WHICH OF THE FOLLOWING CONTINENTS HAS THE MOST COUNTRIES?", {"ASIA", "AFRICA", "EUROPE", "SOUTH AMERICA"}, {"B", "\0", "\0", "\0"}},
 
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"AVERAGE", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "IN THE ORIGINAL STORY PUBLISHED IN 1812, HOW OLD WAS SNOW WHITE?", {"14 YEARS OLD", "12 YEARS OLD", "9 YEARS OLD", "7 YEARS OLD"}, {"D", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHICH HISTORICAL EVENT MARKED THE START OF WORLD WAR II?", {"ATTACH OF PEARL HARBOR", "BATTLE OF BRITAIN", "THE INVASION OF POLAND", "D-DAY LANDINGS"}, {"C", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHO IS THE FIRST PRESIDENT OF THE THIRD REPUBLIC OF THE PHILIPPINES?", {"MANUEL QUEZON", "MANUEL ROXAS", "SERGIO OSMENA", "RAMON MAGSAYSAY"}, {"B", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHICH TREATY ENDED THE SPANISH-AMERICAN WAR, LEADING TO THE CESSION OF THE PHILIPPINES TO THE UNITED STATES?", {"TREATY OF VERSAILLES", "TREATY OF WESTPHALIA", "TREATY OF TORDESILLAS", "TREATY OF PARIS"}, {"D", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHO WROTE PRIDE AND PREJUDICE?", {"JANE AUSTEN", "MARY SHELLEY", "EMILY BRONTE", "GEORGE ELIOT"}, {"A", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHO WAS THE FIRST PRINCESS DON JUAN MET IN THE EPIC IBONG ADARNA?", {"JUANA", "MARIA", "LEONORA", "TERESA"}, {"A", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHICH FILIPINO POET WROTE THE EPIC FLORANTE AT LAURA?", {"JOSE RIZAL", "KRIZ BIHAG", "FRANCISCO BALAGTAS", "LUALHATI BAUTISTA"}, {"C", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHICH OF THE FOLLOWING HAPPENED FIRST?", {"THE CREATION OF TOM AND JERRY", "THE FOUNDATION OF DISNEY", "THE PUBLISHMENT OF THE NOVEL HOW TO KILL A MOCKINGBIRD", "THE OPENING OF THE SOUND OF MUSIC STAGE MUSICAL"}, {"B", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHAT IS THE TITLE OF THE FIFTH BOOK IN J.K ROWLING'S HARRY POTTER SERIES", {"HARRY POTTER AND THE CHAMBER OF SECRETS", "HARRY POTTER AND THE SORCERER'S STONE", "HARRY POTTER AND THE GOBLET OF FIRE", "HARRY POTTER AND THE ORDER OF THE PHOENIX"}, {"D", "\0", "\0", "\0"}},
+        {"AVERAGE", "HISTORY AND LITERATURE", "WHO IS THE PROTAGONIST IN THE NOVEL LITTLE WOMEN?", {"JOSEPHINE MARCH", "BETH MARCH", "THEODORE LAURENCE", "SALLIE MOFFAT"}, {"A", "\0", "\0", "\0"}},
 
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "WHAT IS THE COMPLEX NUMBER E RAISED TO (I)(PI) EQUAL TO?", {"1", "-1", "PI", "E"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "IF ANY NUMBER RAISED TO ZERO IS 1, THEN WHAT IS ZERO RAISED TO ZERO?", {"1", "0", "UNDEFINED", "THE ANSWER IS LEFT AS AN EXERCISE!"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "ARE THE DERIVATIVES OF -1/(X+1) AND X/(X+1) THE SAME?", {"YES", "MAYBE", "NO", "SECRET"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "WHAT IS THE SMALLEST NUMBER THAT IS DIVISIBLE BY 1, 2, 3, 4, 5, 6, 7, 8, 9, AND 10?", {"2510", "2490", "2480", "2520"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "WHAT IS 10!/7! EQUAL TO?", {"720", "910", "820", "610"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "LESTER IS 14 YEARS OLDER THAN JEN. IN 6 YEARS, LESTER WILL BE THREE TIMES AS OLD AS JEN. HOW OLD IS LESTER NOW?", {"12", "13", "14", "15"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "WHAT IS THE MATHEMATICAL NAME FOR THE SYMBOL #?", {"HASHTAG", "OCTOTHORPE", "HOTLINE", "OCTOTHROPE"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "A CIRCLE IS CENTERED AT THE ORIGIN. GIVEN POINT (4,3) ON THE CIRCLE, WHAT IS THE RADIUS OF THE CIRCLE?", {"4", "6", "8", "5"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "WHAT IS THE VALUE OF PI TO TEN DECIMAL PLACES?", {"3.1415926297", "3.1415926815", "3.1415926535", "3.1415629535"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "MATHEMATICS", "HOW MANY YEARS ARE THERE IN ONE BILLION SECONDS?", {"32 YEARS", "33 YEARS", "30 YEARS", "31 YEARS"}, {"D", "\0", "\0", "\0"}},
 
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "WHAT IS THE ONLY MAMMAL THAT HAS SCALES?", {"ARMADILLO", "PANGOLIN", "PORCUPINE", "PLATYPUS"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "THE LONGEST WORD IN ENGLISH PERTAINS TO WHAT KIND OF DISEASE?", {"SKIN DISEASES", "LUNG DISEASE", "HEART DISEASE", "LIVER DISEASE"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "THE HG SYMBOL FOR MERCURY CAME FROM WHAT WORD?", {"HYDRARGYRUM", "HYDRAGERAM", "HYDRAGOS", "HYDRAGORUM"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "WHAT IS THE FIRST METAL USED BY ANCIENT PEOPLE?", {"TIN", "COPPER", "GOLD", "SILVER"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "WHAT IS DIAMOND MADE OF?", {"MAGNESIUM", "BORON", "CARBON", "SODIUM"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "WHAT IS THE 100TH ELEMENT ON THE PERIODIC TABLE?", {"MENDELEVIUM", "RUTHERFORDIUM", "AMERICIUM", "FERMIUM"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "IS WATER WET?", {"SECRET", "SOMETIMES", "YES", "NO"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "HOW MANY LETTERS DOES THE FEAR OF LONG WORDS HAVE?", {"41", "36", "29", "44"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "STARS ARE MOSTLY MADE OF WHAT ELEMENT?", {"HYDROGEN AND NITROGEN", "CARBON AND NITROGEN", "HYDROGEN AND HELIUM", "NITROGEN AND HELIUM"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "SCIENCE", "WHAT IS THE ELECTRONIC CONFIGURATION OF OXYGEN?", {"1S 2S 2P^2", "1S^2 2S^2 2P", "1S^2 2S^2 2P^6", "1S^2 2S^2 2P^4"}, {"D", "\0", "\0", "\0"}},
 
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
-        {"DIFFICULT", "dummy4", "HOW MANY SIDES DOES A MEGAGON HAVE?", {"MANY SIDES", "1000 SIDES", "1000000 SIDES", "100000 SIDES"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT IS THE BINARY EQUIVALENT OF 12345?", {"11000000111001", "11000000111011", "10000000111001", "11000000101001"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "IF I HAVE A 2-GIGABYTE MEMORY CARD, APPROXIMATELY HOW MANY PHOTOS CAN IT HOLD IF ONE PHOTO TAKES UP 20 MEGABYTES?", {"200", "100", "150", "250"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT IS THE CORRECT SYNTAX TO DEFINE A FUNCTION POINTER IN C THAT POINTS TO A FUNCTION TAKING TWO INTEGERS AND RETURNING AN INTEGER?", {"INT(*FUNCPTR)(INT,INT)", "INT*FUNCPTR(INT,INT)", "INT(*FUNCPTR)()", "INT*(*FUNCPTR)(INT,INT)"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT COMPUTER TERM DID WEB BROWSER PROGRAMMER LOU MONTULLI COINED TO REFER TO INFORMATION THAT IS SENT FROM THE BROWSER TO THE WEB SERVER?", {"COOKIE", "CACHE", "CAPTCHA", "BYTES"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT YEAR WAS THE FIRST IPHONE RELEASED?", {"2008", "2007", "2009", "2011"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "HOW MANY COLORS ARE USED IN THE LETTERING OF THE GOOGLE LOGO?", {"3", "4", "5", "6"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT IS THE NICKNAME OF ANDROID 5?", {"GINGERBREAD", "OREO", "LOLLIPOP", "ECLAIR"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHICH HAPPENED FIRST?", {"THE SENDING OF THE FIRST EMAIL", "THE FOUNDING OF GOOGLE", "THE INVENTION OF THE FIRST CELLPHONE", "THE LAUNCHING OF THE FIRST WEBSITE"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT PROGRAMMING LANGUAGE IS KNOWN FOR ITS SIMPLICITY AND IS OFTEN RECOMMENDED AS A FIRST PROGRAMMING LANGUAGE?", {"C", "CPP", "PYTHON", "JAVASCRIPT"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "COMPUTER SCIENCE", "WHAT WAS THE NAME OF THE FIRST MECHANICAL COMPUTER DESIGNED BY CHARLES BABBAGE?", {"ANALYTICAL ENGINE", "ENIAC", "ABACUS", "PASCALINE"}, {"A", "\0", "\0", "\0"}},
+
+        {"DIFFICULT", "GEOGRAPHY", "IN WHAT LAYER OF THE EARTH'S ATMOSPHERE DO THE NORTHERN LIGHTS DEVELOP?", {"THERMOSPHERE", "TROPOSPHERE", "STRATOSPHERE", "EXOSPHERE"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "IN THIS LAYER OF THE ATMOSPHERE, METEORS BURN?", {"THERMOSPHERE", "MESOSPHERE", "EXOSPHERE", "STRATOSPHERE"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHICH OF THE FOLLOWING HAS THE LEAST POPULATION?", {"QUEZON CITY", "CEBU CITY", "PASIG CITY", "MANILA"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHIHC COUNTRY IS CONSIDERED TO LIE CLOSE TO WHERE THE SUN RISES?", {"KOREA", "NEW ZEALAND", "JAPAN", "THE PHILIPPINES"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHICH OF THE FOLLOWING IS BOTH AN INDEPENDENT COUNTRY AND A CITY STATE?", {"SINGAPORE", "HONG KONG", "PALAU", "FIJI"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "HOW MANY ARE THERE IN ASIA?", {"50", "48", "47", "44"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHAT IS THE LARGEST DESERT IN THE WORLD?", {"SAHARA", "ARCTIC", "ANTARCTIC", "GOBI"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHAT IS THE DRIEST PLACE ON EARTH?", {"SAHARA", "GOBI", "ATACAMA", "ANTARCTIC"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "WHICH OF THE FOLLOWING IS NOT A REAL CURRENCY?", {"MANAT", "LEV", "RENMINBI", "DALES"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "GEOGRAPHY", "APPROXIMATELY HOW MANY SOVEREIGN COUNTRIES BORDER THE PACIFIC OCEAN?", {"MORE THAN 20 BUT LESS THAN 40", "LESS THAN 40", "MORE THAN 40 BUT LESS THAN 60", "MORE THAN 60"}, {"C", "\0", "\0", "\0"}},
+
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHO IS THE ONLY PRESIDENT OF THE FOURTH REPUBLIC OF THE PHILIPPINES?", {"CORAZON AQUINO", "FERDINAND MARCOS SR.", "ELPIDIO QUIRINO", "FIDEL RAMOS"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHAT IS CONSIDERED TO BE THE FIRST BOOK EVER WRITTEN?", {"KESH TEMPLE HYMN", "THE BIBLE", "A FIRST COURSE IN ABSTRACT ALGBERA", "THE EPIC OF GILGAMESH"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHAT IS THE LONGEST RUNNING ANIMATED TELEVISION SERIES IN THE WORLD?", {"POKEMON", "DORAEMON", "SAZAE-SAN", "DETECTIVE CONAN"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHICH ANCIENT CIVILIZATION BUILT THE CITY OF MACHU PICCHU?", {"THE AZTECS", "THE MAYA", "THE OLMEC", "THE INCA"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "IN THE DIVINE COMEDY, WHO SERVES AS DANTE'S GUIDE THROUGH HELL?", {"LUCIFER", "BEATRICE", "VIRGIL", "CHARON"}, {"C", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHICH NOVEL BY GEORGE ORWELL DEPICTS A DYSTOPIAN FUTURE UNDER A TOTALITARIAN REGIME?", {"ANIMAL FARM", "BRAVE NEW WORLD", "FAHRENHEIT 451", "NINETEEN EIGHTY-FOUR"}, {"D", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHAT IS THE LONGEST RUNNING PHILIPPINE TV SHOW?", {"KAPWA KO, MAHAL KO", "TV PATROL", "EAT BULAGA", "SALAMAT DOC"}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHO IS THE FIRST PRESIDENT OF THE FIFTH REPUBLIC OF THE PHILIPPINES?", {"FERDINAND MARCOS SR.", "CORAZON AQUINO", "FIDEL RAMOS", "GLORIA MACAPAGAL-ARROYO"}, {"B", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHO WROTE THE ORIGINAL THE INCREDIBLE HULK COMIC SERIES?", {"STAN LEE AND JACK KIRBY", "STEVE DIKTO AND STAN LEE", "JACK KIRBY AND JOE SIMON", "STAN LEE AND JOHN ROMITA SR."}, {"A", "\0", "\0", "\0"}},
+        {"DIFFICULT", "HISTORY AND LITERATURE", "WHO IS MARVEL'S FIRST SUPERHERO?", {"DARNA", "ANGEL", "NAMOR THE SUB-MARINER", "HUMAN TORCH"}, {"D", "\0", "\0", "\0"}},
         
        
     };
@@ -353,7 +378,7 @@ void add_powerup(Game* game, const Powerup* powerUp) {
 }
 
 void clear_screen() {
-    printf("\033[2J\033[H");
+    system("cls");
 }
 
 void init_player(Game* game) {
@@ -436,24 +461,51 @@ int choose_category(Game* game) {
         }
     }
 
-    system("cls");
+   
 
-    if (game->difficulty != DIFFICULT) {
-        printf(cat_easy_average, game->difficulty == EASY ? 1000 : 5000, game->difficulty == 0 ? "EASY" : "AVERAGE");
-    } else {
-        printf(cat_hard);
+    if (game->difficulty == EASY) {
+        if (dif1 == 0) {
+            clear_screen();
+            puts(easy_remark1);
+            press_continue();
+            clear_screen();
+            puts(easy_remark2);
+            press_continue();
+            dif1 = 1;
+        } else {
+            clear_screen();
+            puts(easy_remark1);
+            press_continue();
+        }
+    } else if (game->difficulty == AVERAGE) {
+        if (dif2 == 0) {
+            clear_screen();
+            puts(average_remark1);
+            press_continue();
+            clear_screen();
+            puts(average_remark2);
+            press_continue();
+            dif2 = 1;
+        } else {
+            clear_screen();
+            puts(average_remark3);
+            press_continue();
+        }
+    } else if (game->difficulty == DIFFICULT) {
+        if (dif3 == 0) {
+            clear_screen();
+            puts(difficult_remark1);
+            press_continue();
+            clear_screen();
+            puts(difficult_remark2);
+            press_continue();
+            dif3 = 1;
+        } else {
+            clear_screen();
+            puts(difficult_remark3);
+            press_continue();
+        }
     }
-
-    char input = '0';
-    do {
-        input = getch();
-    } while (input != '1');
-
-    system("cls");
-
-    printf("\n");
-    center_item(26);
-    printf("PLEASE CHOOSE A CATEGORY\n");
 
     for (int i = 0; i < 3; i++) {
         if ((game->difficulty == EASY) && (used_easy_category[cat_index[i]]) && (cat_flg1 < 2)) {
@@ -480,44 +532,28 @@ int choose_category(Game* game) {
         }
     }
 
-    printf("\n\n");
-    for (int i = 0; i < 3; i++) {
-        if (game->difficulty == EASY) {
-            if (!(used_easy_category[cat_index[i]])) {
-                center_item(56);
-                printf("\033[0;36m------------------------------------------------------\033[0m\n");
-                printf("\t\t\t   (%d)\n", i + 1);
-                int size = strlen(game->quizzes[cat_index[i]].category);
-                center_item(size);
-                printf("%s\n", game->quizzes[cat_index[i]].category);
-            }
-        } else if (game->difficulty == AVERAGE) {
-            if (!(used_average_category[cat_index[i]])) {
-                center_item(56);
-                printf("\033[0;36m------------------------------------------------------\033[0m\n");
-                printf("\t\t\t   (%d)\n", i + 1);
-                int size = strlen(game->quizzes[cat_index[i]].category);
-                center_item(size);
-                printf("%s\n", game->quizzes[cat_index[i]].category);
-            }
-        } else if (game->difficulty == DIFFICULT) {
-            if (!(used_hard_category[cat_index[i]])) {
-                center_item(56);
-                printf("\033[0;36m------------------------------------------------------\033[0m\n");
-                printf("\t\t\t   (%d)\n", i + 1);
-                int size = strlen(game->quizzes[cat_index[i]].category);
-                center_item(size);
-                printf("%s\n", game->quizzes[cat_index[i]].category);
-            }
-        }
-    }
-    center_item(56);
-    printf("\033[0;36m------------------------------------------------------\033[0m\n");
+    clear_screen();
 
-    input = '0'; 
+    
+    
+    if (game->difficulty == EASY) {
+        printf(show_category, (!(used_easy_category[cat_index[0]])) ? game->quizzes[cat_index[0]].category : "",
+                            (!(used_easy_category[cat_index[1]])) ? game->quizzes[cat_index[1]].category : "",
+                            (!(used_easy_category[cat_index[2]])) ? game->quizzes[cat_index[2]].category : "");
+    } else if (game->difficulty == AVERAGE) {
+        printf(show_category, (!(used_average_category[cat_index[0]])) ? game->quizzes[cat_index[0]].category : "",
+                            (!(used_average_category[cat_index[1]])) ? game->quizzes[cat_index[1]].category : "",
+                            (!(used_average_category[cat_index[2]])) ? game->quizzes[cat_index[2]].category : "");
+    } else if (game->difficulty == DIFFICULT) {
+        printf(show_category, (!(used_hard_category[cat_index[0]])) ? game->quizzes[cat_index[0]].category : "",
+                            (!(used_hard_category[cat_index[1]])) ? game->quizzes[cat_index[1]].category : "",
+                            (!(used_hard_category[cat_index[2]])) ? game->quizzes[cat_index[2]].category : "");
+    }
+
+    char input = '0'; 
     do {
         input = getch();
-    } while ((input < '1') && (input > '3'));
+    } while ((input != '1') && (input != '2') && (input != '3'));
 
     return cat_index[input - '1'];
 }
@@ -821,82 +857,464 @@ int init_timer(Game* game) {
     return game->difficulty == EASY ? 30 : (game->difficulty == AVERAGE ? 45 : 60);
 }
 
+void press_continue() {
+    char input = '0';
+    do {
+        input = getch();
+    } while ((input != ' '));
+}
+
 char* separator = "\033[0;36m==============================================================================================================\033[0m";
 
-char* title_screen = "\033[0;36m==============================================================================================================\033[0m\n"
-                     "\n"
-                     "\n"
-                     "        \033[0;36m######    ######   ###  ###  ######  ########     ###   ###   ######     ###  ###  ###   ###### \n"
-                     "       ###  ###  ###  ###  ###  ###   ####       ####     #### ####  ###  ###   ###   ### ###   ###  ###\n"
-                     "       \033[0;34m### ####  ###  ###  ###  ###   ####      ####      #########  ###  ###  ###    ######    ###  ###\n"
-                     "       ### ####  ###  ###  ###  ###   ####     ####       ### # ###  ###  ###         #####     ###  ###\n"
-                     "       \033[0;35m###       ###  ###  ###  ###   ####    ####        ###   ###  ###  ###         ######    ###  ###\n"
-                     "       ###   ##   ######   ###  ###   ####   ####         ###   ###  ###  ###         ### ###   ###  ###\n"
-                     "        ######      #####   ######   ######  ########     ###   ###   ######          ###  ###   ######\033[0m\n"
-                     "\n"
-                     "\n" 
-                     "\n"   
-                     "                         \e[0;36m----------------------------     ----------------------------\033[0m\n"
-                     "                          [1]        PLAY                  [2]        ABOUT\n" 
-                     "                         \033[0;36m----------------------------     ----------------------------\n"
-                     "                         ----------------------------     ----------------------------\033[0m\n"
-                     "                          [3]    LEADERBOARDS              [4]        EXIT\n" 
-                     "                         \033[0;36m----------------------------     ----------------------------\033[0m\n"                                        
-                     "\n"
-                     "\n"
-                     "\033[0;36m==============================================================================================================\033[0m\n";
+// char* title_screen = "\033[0;36m==============================================================================================================\033[0m\n"
+//                      "\n"
+//                      "\n"
+//                      "        \033[0;36m######    ######   ###  ###  ######  ########     ###   ###   ######     ###  ###  ###   ###### \n"
+//                      "       ###  ###  ###  ###  ###  ###   ####       ####     #### ####  ###  ###   ###   ### ###   ###  ###\n"
+//                      "       \033[0;34m### ####  ###  ###  ###  ###   ####      ####      #########  ###  ###  ###    ######    ###  ###\n"
+//                      "       ### ####  ###  ###  ###  ###   ####     ####       ### # ###  ###  ###         #####     ###  ###\n"
+//                      "       \033[0;35m###       ###  ###  ###  ###   ####    ####        ###   ###  ###  ###         ######    ###  ###\n"
+//                      "       ###   ##   ######   ###  ###   ####   ####         ###   ###  ###  ###         ### ###   ###  ###\n"
+//                      "        ######      #####   ######   ######  ########     ###   ###   ######          ###  ###   ######\033[0m\n"
+//                      "\n"
+//                      "\n" 
+//                      "\n"   
+//                      "                         \e[0;36m----------------------------     ----------------------------\033[0m\n"
+//                      "                          [1]        PLAY                  [2]        ABOUT\n" 
+//                      "                         \033[0;36m----------------------------     ----------------------------\n"
+//                      "                         ----------------------------     ----------------------------\033[0m\n"
+//                      "                          [3]    LEADERBOARDS              [4]        EXIT\n" 
+//                      "                         \033[0;36m----------------------------     ----------------------------\033[0m\n"                                        
+//                      "\n"
+//                      "\n"
+//                      "\033[0;36m==============================================================================================================\033[0m\n";
 
-char* welcome_screen =  "\033[0;36m==============================================================================================================\033[0m\n"
+char* title_screen =    "==============================================================================================================\n"
                         "\n"
-                        "                      .-..----.-.                                                             \n"
-                        "                     .-.       .-.                HELLO, \033[0;36m%s\033[0m!                                  \n"
-                        "                 ....--         ---...            WELCOME TO EQUIZ MO'KO.                     \n"
-                        "                --.  ..         ..  ..-                                                       \n"
-                        "                -..  ..---------..  ..-           I AM THE QUIZ MASTER.                       \n"
-                        "                   -+-...........-+-              TOGETHER, WE WILL CHALLENGE YOUR MIND,      \n"
-                        "                 .++#-.+###.+###.-#++.            TEST YOUR KNOWLEDGE, AND HAVE SOME FUN.     \n"
-                        "                ..-+##- ..   .. -##+-..                                                       \n"
-                        "                   .+##-.     ..##+.              ARE YOU READY TO PUT YOUR BRAIN TO THE TEST?\n"
-                        "                   ..+###-   -+##+..                                                          \n"
-                        "                       .-+###+-.                  [1] YES    [2] NO                           \n"
-                        "                          .+.                                                                 \n"
-                        "\n"
-                        "\033[0;36m==============================================================================================================\033[0m\n";
+                        "      .-. .-.\n"
+                        "     #++#+#++#=======================================================================================\n"
+                        "       -+++-                                                                                        |\n"
+                        "    +    .                                       J&J PRESENTS                                       |\n"
+                        "         |                                                                                          |    *\n" 
+                        "         |      #######  ##     ## #### ########    ##     ##  #######  #### ##    ##  #######      |\n"
+                        "  +      |     ##     ## ##     ##  ##      ##      #### #### ##     ##  ##  ##  ##   ##     ##     |\n"
+                        "         |     ##     ## ##     ##  ##     ##       ## ### ## ##     ## ##   #####    ##     ##     |   +\n"
+                        "      *  |     ##   ###  ##     ##  ##    ##        ##     ## ##     ##      ##  ##   ##     ##     |\n"
+                        "         |      ##### ##  #######  #### ########    ##     ##  #######       ##    ##  #######      |\n"
+                        "         |                                                                                          |      *\n"
+                        "  *      |                                                                                          |\n"
+                        "         |                          ------------------  ------------------                        -+--.\n"
+                        "         |                           [1] START           [2] ABOUT                              .-+++++-\n"
+                        "         |                          ------------------  ------------------                    .++++--.-+-+.\n"
+                        "   .--.     .--.                    ------------------  ------------------                   +--+-+--------.\n"
+                        "  .+ +.     .+ +.                    [3] LEADERBOARDS    [4] EXIT                          .-++----------+---\n"
+                        "  -+  ++-#-++   +                   ------------------  ------------------                  .+#-+#########..\n"
+                        " -+   @     @   +-                                                                                --++-\n" 
+                        ".+-+-.   #    .+-+.===============================================================================--++-\n"   
+                        ".#+              +#.                 A CMSC 21 FINAL PROJECT BY JOHN & JHUN                     .++#++++.\n"            
+                        "==============================================================================================================\n";
 
-char* cat_easy_average =    "\033[0;36m==============================================================================================================\033[0m\n"
+
+char* leaderboards =    "   ##      #######    ##    #######  ####### #######  #######   ######     ##    #######  #######   #####     \n"
+                        "   ##      ##        ####   ##    ## ##      ##    ## ##    ## ##    ##   ####   ##    ## ##    ## ##         \n"
+                        "   ##      #####   ##    ## ##    ## #####   #######  #######  ##    ## ##    ## #######  ##    ##  #####     \n"
+                        "   ##      ##      ######## ##    ## ##      ##  ##   ##    ## ##    ## ######## ##  ##   ##    ##      ##    \n"
+                        "   ####### ####### ##    ## #######  ####### ##    ## #######   ######  ##    ## ##    ## #######   #####     \n";
+
+char* welcome_screen1 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
                             "\n"
-                            "                      .-..----.-.                                                         \n"
-                            "                     .-.       .-.                                                        \n"
-                            "                 ....--         ---...                                                    \n"
-                            "                --.  ..         ..  ..-           SINCE YOUR SCORE IS BELOW \033[0;36m%d\033[0m,           \n"
-                            "                -..  ..---------..  ..-           I'LL PREPARE A NICE \033[0;36m%s\033[0m ROUND FOR YOU.   \n"
-                            "                   -+-...........-+-                                                      \n"
-                            "                 .++#-.+###.+###.-#++.            ARE YOU READY?                          \n"
-                            "                ..-+##- ..   .. -##+-..                                                   \n"
-                            "                   .+##-.     ..##+.              [1] YES                                 \n"
-                            "                   ..+###-   -+##+..                                                      \n"
-                            "                       .-+###+-.                                                          \n"
-                            "                          .+.                                                             \n"
+                            "\n" 
+                            "                         -**** ******---------------------------------------------------\n"
+                            "                          HEY, \033[0;36m%s\033[0m! WELCOME TO QUIZ MO'KO!\n"
+                            "                          I'M THE QUIZ MASTER, AND I'M HERE TO SEE IF YOU HAVE WHAT IT\n"
+                            "                          TAKES TO CONQUER MY GAME.\n"
+                            "                         ---------------------------------------------------------------\n"
                             "\n"
-                            "\033[0;36m==============================================================================================================\033[0m\n";      
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* welcome_screen2 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          HMMMM...\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* welcome_screen3 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          HMMMM...\n"
+                            "                          NEVERMIND.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                         PRESS [SPACEBAR] TO CONTINUE.                                        \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* welcome_screen4 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          MOVING ON.\n"
+                            "                          BEFORE WE START I WANT YOU TO READ HOW MY GAME WORKS.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* welcome_screen5 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          HMM... YOU'VE READ QUITE FAST.\n" 
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        [1] CONTINUE    [2] READ AGAIN                                        \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* welcome_screen6 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          CONGRATULATIONS!\n"
+                            "                          YOU ARE NOW READY TO TAKE MY CHALLENGE. RISE TO THE TOP AND\n" 
+                            "                          BEAT ALL OF MY TOP 3 SCORERS. I'LL SEE WHAT YOU CAN DO AT THE\n"
+                            "                          END OF THIS GAME. GOODLUCK!\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* easy_remark1 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          HMMM...\n" 
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* easy_remark2 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          HMMM...\n" 
+                            "                          SINCE YOU ARE A BEGINNER, I GUESS I'LL START AN EASY ROUND\n"
+                            "                          FOR YOU. TRY TO REACH A SCORE OF 1000 AND LET'S SEE YOUR\n"
+                            "                          POTENTIAL\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* show_category =       "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          CHOOSE ONE CATEGORY YOU THINK YOU'RE GOOD AT.\n" 
+                            "                           [1] %s\n"
+                            "                           [2] %s\n"
+                            "                           [3] %s\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        CHOOSE A CATEGORY TO CONTINUE.                                        \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* easy_remark3 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          WOOWWW! \n" 
+                            "                          I GUESS YOU ARE NOT A BEGINNER AT ALL. LET'S PROCEED TO THE\n"
+                            "                          NEXT CATEGORY AND LET'S SEE IF IT'S JUST A PURE LUCK OR NAH.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* average_remark1 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          CONGRATULATIONS ON ACHIEVING A SCORE OF 1000!\n" 
+                            "                          I GUESS, LADY LUCK IS IN YOUR SIDE.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* average_remark2 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          AS A REWARD FOR YOUR WIT, I'LL ADJUST THE DIFFICULTY INTO\n" 
+                            "                          AVERAGE. IF THE CHALLENGE IS NOT ENOUGH FOR YOU TO ADMIT A\n"
+                            "                          DEFEAT, TRY TO REACH A SCORE OF 3500. GOODLUCK!\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* average_remark3 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          WOAAHHH! \n" 
+                            "                          YOU REALLY WANT TO DOMINATE THE GAME, ARE YOU? LET'S PROCEED\n"
+                            "                          TO THE NEXT CATEGORY AND LET'S SEE IF YOU CAN STILL SMILE.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
 
 
-char* cat_hard =    "\033[0;36m==============================================================================================================\033[0m\n"
-                    "\n"
-                    "                      .-..----.-.                                                                             \n"
-                    "                     .-.       .-.                                                                            \n"
-                    "                 ....--         ---...                                                                        \n"
-                    "                --.  ..         ..  ..-           YOU'RE ELIGIBLE TO PLAY THE DIFFICULT ROUND,                     \n"
-                    "                -..  ..---------..  ..-           PREPARE FOR CHALLENGING QUESTION!                           \n"
-                    "                   -+-...........-+-                                                                          \n"
-                    "                 .++#-.+###.+###.-#++.                                                                        \n"
-                    "                ..-+##- ..   .. -##+-..                                                                       \n"
-                    "                   .+##-.     ..##+.                                                                          \n"
-                    "                   ..+###-   -+##+..                                                                          \n"
-                    "                       .-+###+-.                                                                              \n"
-                    "                          .+.                                                                                 \n"
-                    "\n"
-                    "\033[0;36m==============================================================================================================\033[0m\n"; 
+char* difficult_remark1 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          OHHH? \n" 
+                            "                          SO YOU'RE HERE. I CAN'T BELIEVE THAT YOU HAVE REACHED THIS\n"
+                            "                          FAR.\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* difficult_remark2 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          AS STATED IN MECHANICS, SINCE YOUR SCORE IS NOW ABOVE 3500,\n"
+                            "                          I'LL NOW BESTOW WHAT I CALL THE DIFFICULT ROUND. THIS HAS\n"
+                            "                          MOST CHALLENGING QUESTION I CAN GIVE TO YOU. TRY YOUR BEST\n"
+                            "                          TO BEST THE TOP3 SCORERS. GOODLUCK!\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
+char* difficult_remark3 =     "\033[0;36m==============================================================================================================\033[0m\n"
+                            "\n"                                        
+                            "                                                  +###                                                        \n"               
+                            "                                                .###########.                                                 \n"            
+                            "                                               ###############                                                \n"            
+                            "                                               ###############-                                               \n"                         
+                            "                                              -################                                               \n"            
+                            "                                         .+###.                                                               \n"                      
+                            "                                       +###############-            +##                                       \n"            
+                            "                                           ..   .###################                                          \n"            
+                            "                                              #     #   #+    #-                                              \n"                        
+                            "                                            ##      -.  +      ##                                             \n"                       
+                            "                                               +  -.     -#  +                                                \n"
+                            "\n"
+                            "\n" 
+                            "                         -GAME MASTER---------------------------------------------------\n"
+                            "                          I STILL CAN'T BELIEVE THAT YOU'RE HERE. BEST OF LUCK!\n"
+                            "                         ---------------------------------------------------------------\n"
+                            "\n"
+                            "\033[0;36m==============================================================================================================\033[0m\n"
+                            "                                        PRESS [SPACEBAR] TO CONTINUE.                                         \n"
+                            "\033[0;36m==============================================================================================================\033[0m\n";
+
 
 char* lose_screen = "\033[0;36m==============================================================================================================\033[0m\n"
                     "\n"

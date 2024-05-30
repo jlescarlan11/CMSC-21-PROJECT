@@ -63,16 +63,44 @@ int main() {
 
             system("cls");
             PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            printf(welcome_screen, game.player.name);
+            printf(welcome_screen1, game.player.name);
+            press_continue();
 
+            clear_screen();
+            puts(welcome_screen2);
+            press_continue();
+
+            clear_screen();
+            puts(welcome_screen3);
+            press_continue();
+
+            clear_screen();
+            puts(welcome_screen4);
+            press_continue();
+
+            mechanics:
+            printf("mechanics is here");
+            getch();
+            
+
+            clear_screen();
+            puts(welcome_screen5);
             input = '0';
             do {
                 input = getch();
             } while ((input != '2') && (input != '1'));
 
             if (input == '2') {
-                goto start;
+                goto mechanics;
             }
+
+            clear_screen();
+            
+            
+            clear_screen();
+            puts(welcome_screen6);
+            press_continue();
+            
 
             while (1) {     
 

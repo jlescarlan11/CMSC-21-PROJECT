@@ -76,6 +76,7 @@ void show_title_screen();
 void show_welcome_screen(Game* game);
 void show_lose_screen(Game* game, int j, int num_scrores);
 void show_about_screen();
+void clear_screen();
 
 void init_player(Game* game);
 void confirm_name(Game* game);
@@ -97,19 +98,39 @@ void printTopScores(Score scores[], int numScores, int n);
 void readScore(Score **scores, int *numScores);
 void sortScores(Score scores[], int numScores);
 
+void press_continue();
+
 extern char* separator;
 extern char* title_screen;
-extern char* welcome_screen;
+extern char* welcome_screen1;
+extern char* welcome_screen2;
+extern char* welcome_screen3;
+extern char* welcome_screen4;
+extern char* welcome_screen5;
+extern char* welcome_screen6;
 extern char* cat_easy_average;
 extern char* cat_hard;
+extern char* leaderboards;
 extern char* lose_screen;
 extern char* about_screen;
+extern char* show_category;
+extern char* easy_remark1;
+extern char* easy_remark2;
+extern char* easy_remark3;
+extern char* average_remark1;
+extern char* average_remark2;
+extern char* average_remark3;
+extern char* difficult_remark1;
+extern char* difficult_remark2;
+extern char* difficult_remark3;
+
 
 extern int cat_flg1;
 extern int cat_flg2;
 extern int cat_flg3;
 extern int cht1;
 extern int cht2;
+extern int dif1, dif2, dif3;
 extern int opt[4];
 extern bool used_easy_category[10];
 extern bool used_average_category[10];
