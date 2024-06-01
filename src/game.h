@@ -25,7 +25,6 @@ enum Difficulty {
 typedef struct {
     char name[20];
     int score;
-    int numScores;
 } Score;
 
 typedef struct {
@@ -72,11 +71,6 @@ Powerup create_powerup(const char* name, const char* description);
 void init_contents(Game* game);
 void add_quiz(Game* game, const Quiz* quiz);
 void add_powerup(Game* game, const Powerup* powerUp);
-void show_title_screen();
-void show_welcome_screen(Game* game);
-void show_lose_screen(Game* game, int j, int num_scrores);
-void show_about_screen();
-void clear_screen();
 
 void init_player(Game* game);
 void confirm_name(Game* game);
@@ -85,18 +79,21 @@ void play_quiz(Game* game, int start_index, int *que_index, int *p_index, int *u
 int init_timer(Game* game);
 void init_difficulty(Game* game);
 int choose_category(Game* game);
-void markCategoryAsUsed(int categoryIndex, Game* game);
+void mark_category_used(int categoryIndex, Game* game);
 void init_index(int *array, int size, int modulo, int multiple);
 int is_duplicate(int *array, int size, int value);
 int is_correctanswer(char user_answer, Quiz quiz);
 
+
 void center_item(int size);
 void add_spaces(int size, int max_size);
+void clear_screen();
 
-void writeScore(char *name, int score);
-void printTopScores(Score scores[], int numScores, int n); 
-void readScore(Score **scores, int *numScores);
-void sortScores(Score scores[], int numScores);
+void write_score(char *name, int score);
+void read_score(Score **scores, int *numScores);
+
+void print_top_scores(Score scores[], int numScores, int n);
+
 
 void press_continue();
 
@@ -112,6 +109,7 @@ extern char* cat_easy_average;
 extern char* cat_hard;
 extern char* leaderboards;
 extern char* lose_screen;
+extern char* win_screen;
 extern char* about_screen;
 extern char* show_category;
 extern char* easy_remark1;

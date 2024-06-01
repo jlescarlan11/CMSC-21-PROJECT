@@ -63,7 +63,16 @@ int main() {
 
             system("cls");
             PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            printf(welcome_screen1, game.player.name);
+            
+            int name_length = strlen(game.player.name);
+            int spaces_to_add = 10 - name_length;
+
+            if (spaces_to_add < 0) spaces_to_add = 0; 
+
+            char formatted_name[30]; 
+            snprintf(formatted_name, sizeof(formatted_name), "%s!%*s", game.player.name, spaces_to_add, "");
+
+            printf(welcome_screen1, formatted_name);
             press_continue();
 
             clear_screen();
@@ -112,19 +121,18 @@ int main() {
                 PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 int cat_index = choose_category(&game);
 
-                markCategoryAsUsed(cat_index, &game);
+                mark_category_used(cat_index, &game);
 
                 play_quiz(&game, cat_index, que_index, pow_index, used_powerup);
 
+                write_score(game.player.name, game.player.score);
+
+                int num_scores = 0;
+                read_score(&scores, &num_scores);
+
                 if (game.player.lives == 0) {
                     PlaySound(TEXT("assets/lose.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                    writeScore(game.player.name, game.player.score);
-
-                    
-
-                    int num_scores = 0;
-                    readScore(&scores, &num_scores);
-                    sortScores(scores, num_scores);
+                
 
                     for (int j = 0; j < num_scores; j++) {
                         if ((strcmp(scores[j].name, game.player.name) == 0) && (scores[j].score == game.player.score)) {
@@ -133,19 +141,27 @@ int main() {
                         }
                     }
 
-                    input; 
-                    do {
-                        input = getch();
-                    } while ((input != '1') && (input != '2'));
+                } else {
+                    PlaySound(TEXT("assets/win.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
-                    free(scores);
-
-                    if(input == '1') {
-                        goto play;
-                    } else {
-                        goto start;
+                    for (int j = 0; j < num_scores; j++) {
+                        if ((strcmp(scores[j].name, game.player.name) == 0) && (scores[j].score == game.player.score)) {
+                            system("cls");
+                            printf(win_screen, game.player.name, game.player.score, j+1, num_scores);
+                        }
                     }
+                }
 
+                input; 
+                do {
+                    input = getch();
+                } while ((input != '1') && (input != '2'));
+                
+                free(scores);
+                if(input == '1') {                        
+                    goto play;
+                } else {
+                    goto start;
                 }
             }
 
@@ -168,9 +184,8 @@ int main() {
                 system("cls");
 
                 int num_scores = 0;
-                readScore(&scores, &num_scores);
-                sortScores(scores, num_scores);
-                printTopScores(scores, num_scores, 3);
+                read_score(&scores, &num_scores);
+                print_top_scores(scores, num_scores, 3);
             
                 do {
                     input = getch();
