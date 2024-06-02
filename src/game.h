@@ -74,6 +74,7 @@ void add_powerup(Game* game, const Powerup* powerUp);
 
 void init_player(Game* game);
 void confirm_name(Game* game);
+void init_welcome_remarks(Game* game);
 
 void play_quiz(Game* game, int start_index, int *que_index, int *p_index, int *used_powerup);
 int init_timer(Game* game);
@@ -88,14 +89,13 @@ int is_correctanswer(char user_answer, Quiz quiz);
 void center_item(int size);
 void add_spaces(int size, int max_size);
 void clear_screen();
+void press_continue();
 
 void write_score(char *name, int score);
 void read_score(Score **scores, int *numScores);
-
 void print_top_scores(Score scores[], int numScores, int n);
 
 
-void press_continue();
 
 extern char* separator;
 extern char* title_screen;

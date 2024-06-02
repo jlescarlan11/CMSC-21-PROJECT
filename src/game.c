@@ -608,6 +608,52 @@ int is_duplicate(int *array, int size, int value) {
     return 0; 
 }
 
+void init_welcome_remarks(Game* game) {
+    int name_length = strlen(game->player.name);
+    int spaces_to_add = 10 - name_length;
+    if (spaces_to_add < 0) spaces_to_add = 0; 
+    char formatted_name[30]; 
+    snprintf(formatted_name, sizeof(formatted_name), "%s!%*s", game->player.name, spaces_to_add, "");
+
+    printf(welcome_screen1, formatted_name);
+    press_continue();
+
+    clear_screen();
+    puts(welcome_screen2);
+    press_continue();
+
+    clear_screen();
+    puts(welcome_screen3);
+    press_continue();
+
+    clear_screen();
+    puts(welcome_screen4);
+    press_continue();
+
+    mechanics:
+    printf("mechanics is here");
+    press_continue();
+            
+
+    clear_screen();
+    puts(welcome_screen5);
+    char input = '0';
+    do {
+        input = getch();
+    } while ((input != '2') && (input != '1'));
+
+    if (input == '2') {
+        goto mechanics;
+    }
+
+    clear_screen();
+            
+            
+    clear_screen();
+    puts(welcome_screen6);
+    press_continue();
+}
+
 void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int *used_powerup) {
     for (int i = 0; i < 10; i++) {
         int del_index = rand() % 4;
@@ -1097,8 +1143,6 @@ char* easy_remark1 =     "======================================================
                             "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
                             "                       |                                                             |\n"
                             "                       |  SINCE YOU ARE BEGINNER, I'LL START AN EASY ROUND FOR YOU   |\n"
-                            "                       |   UNLOCK YOUR POTENTIAL AND BEAT ALL OF MY TOP 3 SCORERS.   |\n"
-                            "                       |                          GOODLUCK!                          |\n"
                             "                       |                                                             |\n"
                             "                       ===============================================================\n"
                             "\n"

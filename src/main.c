@@ -63,53 +63,8 @@ int main() {
 
             system("cls");
             PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            
-            int name_length = strlen(game.player.name);
-            int spaces_to_add = 10 - name_length;
-
-            if (spaces_to_add < 0) spaces_to_add = 0; 
-
-            char formatted_name[30]; 
-            snprintf(formatted_name, sizeof(formatted_name), "%s!%*s", game.player.name, spaces_to_add, "");
-
-            printf(welcome_screen1, formatted_name);
-            press_continue();
-
-            clear_screen();
-            puts(welcome_screen2);
-            press_continue();
-
-            clear_screen();
-            puts(welcome_screen3);
-            press_continue();
-
-            clear_screen();
-            puts(welcome_screen4);
-            press_continue();
-
-            mechanics:
-            printf("mechanics is here");
-            getch();
-            
-
-            clear_screen();
-            puts(welcome_screen5);
-            input = '0';
-            do {
-                input = getch();
-            } while ((input != '2') && (input != '1'));
-
-            if (input == '2') {
-                goto mechanics;
-            }
-
-            clear_screen();
-            
-            
-            clear_screen();
-            puts(welcome_screen6);
-            press_continue();
-            
+        
+            init_welcome_remarks(&game);            
 
             while (1) {     
 
@@ -119,21 +74,19 @@ int main() {
                 init_difficulty(&game);
 
                 PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                
                 int cat_index = choose_category(&game);
 
                 mark_category_used(cat_index, &game);
 
                 play_quiz(&game, cat_index, que_index, pow_index, used_powerup);
-
-                write_score(game.player.name, game.player.score);
-
+                
                 int num_scores = 0;
+                write_score(game.player.name, game.player.score);
                 read_score(&scores, &num_scores);
 
                 if (game.player.lives == 0) {
                     PlaySound(TEXT("assets/lose.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                
-
                     for (int j = 0; j < num_scores; j++) {
                         if ((strcmp(scores[j].name, game.player.name) == 0) && (scores[j].score == game.player.score)) {
                             system("cls");
