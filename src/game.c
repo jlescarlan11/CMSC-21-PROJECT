@@ -6,9 +6,12 @@
 #include "game.h"
 
 int cat_flg1 = 0, cat_flg2 = 0, cat_flg3 = 0;
+int n1 = 0, n2 = 0, n3 = 0;
 int cht1 = 0, cht2 = 0;
 int opt[4] = {'A', 'B', 'C', 'D'};
 int dif1 = 0, dif2 = 0, dif3 = 0;
+int c_flg1 = 0, c_flg2 = 0, c_flg3 = 0;
+int reset_flg = 0;
 
 int used_powerup[3] = {0};
 
@@ -23,64 +26,41 @@ void write_score(char *name, int score) {
     fclose(file);
 }
 
-void print_top_scores(Score scores[], int numScores, int n) {
+void print_top_scores(Score scores[], int numScores) {
     puts(separator);
     printf("\n\n");
     puts(leaderboards);
     printf("\n");
-    center_item(53);
-    printf("----TOP 5 SCORERS----------------------------------\n");
+    if (numScores == 1) {
+        center_text("----TOP 1 SCORER----------------------------------", 110);
+    } else if (numScores < 5) {
+        char text[50];
+        sprintf(text, "----TOP %d SCORERS----------------------------------",numScores);
+        center_text(text, 110);
 
-    center_item(45);
-    printf("RANK");
-    add_spaces(strlen("RANK"), 10);
-    printf("NAME");
-    add_spaces(strlen("NAME"), 20);
-    printf("SCORE\n");
-    center_item(53);
-    printf("---------------------------------------------------\n");
+    } else {
+        center_text("----TOP 5 SCORERS----------------------------------", 110);
+    }
 
-    center_item(45);
-    printf("[1]");
-    add_spaces(strlen("[1]"), 10);
-    printf("%s", scores[0].name);
-    add_spaces(strlen(scores[0].name), 20);
-    printf("%d\n", scores[0].score);
+    char rankings[100];
+    sprintf(rankings, "RANK%*sNAME%*sSCORE%*s", 6, "", 16, "", 10, "");
+    center_text(rankings, 110);
+    
 
-    center_item(45);
-    printf("[2]");
-    add_spaces(strlen("[2]"), 10);
-    printf("%s", scores[1].name);
-    add_spaces(strlen(scores[1].name), 20);
-    printf("%d\n", scores[1].score);
+    
+    center_text("---------------------------------------------------", 110);
 
-    center_item(45);
-    printf("[3]");
-    add_spaces(strlen("[3]"), 10);
-    printf("%s", scores[2].name);
-    add_spaces(strlen(scores[2].name), 20);
-    printf("%d\n", scores[2].score);
+    
+    for (int i = 0; (numScores > 5) ? (i < 5) : (i < numScores); i++) {
+        char rankings[100];
+        sprintf(rankings, "[%d]%*s%s%*s%05d%*s", i + 1, 7, "", scores[i].name, 20 - strlen(scores[i].name), "",scores[i].score, 11, "");
+        center_text(rankings, 110);
+    }
 
-    center_item(45);
-    printf("[4]");
-    add_spaces(strlen("[4]"), 10);
-    printf("%s", scores[3].name);
-    add_spaces(strlen(scores[3].name), 20);
-    printf("%d\n", scores[3].score);
-
-    center_item(45);
-    printf("[5]");
-    add_spaces(strlen("[5]"), 10);
-    printf("%s", scores[4].name);
-    add_spaces(strlen(scores[4].name), 20);
-    printf("%d\n", scores[4].score);
-
-    center_item(53);
-    printf("---------------------------------------------------\n");
-    printf("\n\n");
+    center_text("---------------------------------------------------", 110);
+    printf("\n");
     puts(separator);
-    center_item(19);
-    printf("PRESS 1 TO GO BACK\n");
+    center_text("PRESS 1 TO GO BACK",110);
     puts(separator);
 }
 
@@ -91,6 +71,10 @@ void read_score(Score **scores, int *numScores) {
     FILE *file = fopen("assets/scores.txt", "r");
 
     *numScores = 0; 
+
+    if (file == NULL) {
+        return;
+    }
 
     while ((fscanf(file, "%s %d", names, &score) == 2)) {
         (*numScores)++;
@@ -378,32 +362,26 @@ void add_powerup(Game* game, const Powerup* powerUp) {
 }
 
 void clear_screen() {
-    system("cls");
+    clear_screen();
 }
 
 void init_player(Game* game) {
     clear_screen();
 
     printf("\n");
-    center_item(strlen("BEFORE WE START, PLEASE ENTER YOUR NAME"));
-    printf("BEFORE WE START, PLEASE ENTER YOUR NAME\n");
-    center_item(strlen("PRESS [ENTER] IF DONE"));
-    printf("PRESS [ENTER] IF DONE\n");
-    printf("\n");
-    center_item(strlen("-----------"));
-    printf("-----------\n");
-    center_item(strlen("-----------") + 1);
-    printf("| ");
+    center_text("BEFORE WE START, PLEASE ENTER YOUR NAME\n", 110);
+    center_text("PRESS [ENTER] IF DONE\n", 110);
+    printf("                                                ┌──────────\n");
+    printf("                                                │ ");
 
-    game->player.name = malloc((MAX_NAME_LENGTH + 1) * sizeof(char)); // Allocate memory for name
+    game->player.name = malloc((MAX_NAME_LENGTH + 1) * sizeof(char)); 
     scanf("%10s", game->player.name); 
-    printf("");
 
     for (int i = 0; game->player.name[i]; i++) {
         game->player.name[i] = toupper(game->player.name[i]);
     }
 
-    game->player.score = 0;
+    game->player.score = 16500;
     game->player.lives = 3;
 
     memset(game->clicked_powerup, 0, sizeof(game->clicked_powerup));
@@ -422,17 +400,11 @@ void confirm_name(Game* game) {
     clear_screen();
 
     printf("\n");
-    center_item(strlen("IS  THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n") + strlen(game->player.name));
-    printf("IS [%s] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?\n\n", game->player.name);
-    center_item(strlen("(1) YES    (2) NO\n"));
-    printf("(1) YES    (2) NO\n");
-}
+    char arr[100];
 
-void center_item(int size) {
-    int spaces = 55 - size / 2;
-    if (spaces > 0) {
-        printf("%*s", spaces, "");  
-    }
+    snprintf(arr, sizeof(arr), "IS [%s] THE NAME YOU'D LIKE TO USE THROUGHOUT THE GAME?", game->player.name);
+    center_text(arr,100);
+    center_text("[1] YES    [2] NO\n", 100);
 }
 
 void add_spaces(int size, int max_size) {
@@ -454,18 +426,133 @@ void init_difficulty(Game* game) {
     }
 }
 
-int choose_category(Game* game) {
-    int cat_index[MAX_CATEGORIES];
+myNode* get_node(SLList* list, int index) {
+    myNode* current = list->head;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
+    }
+    return current;
+}
 
-    init_index(cat_index, MAX_CATEGORIES, TOTAL_CATEGORIES, 10);
+myNode* create_node(char* x) {
+    myNode* a = (myNode*)malloc(sizeof(myNode));
+    a->value = strdup(x);  // Allocate memory for the string and copy it
+    a->next = 0;
+    return a;
+}
 
-    for(int i = 0; i < MAX_CATEGORIES; i++) {
+void init_list(SLList* list) {
+    list->head = 0;
+    list->tail = 0;
+    list->size = 0;
+}
+
+void populate_list(SLList *list, int *index, Quiz *quizzes, int num_items, int current) {
+    if (current < num_items) {
+        insert_item(list, current, quizzes[index[current]].category);
+        populate_list(list, index, quizzes, num_items, current + 1);
+    }
+}
+
+
+char* get_item(SLList* list, int index) {
+    if (index >= 0 && index <= list->size - 1) {
+        myNode* node = get_node(list, index);
+        return node->value;
+    }
+    return NULL;
+}
+
+void set_item(SLList* list, int index, char* item) {
+    myNode* node = get_node(list, index);
+    free(node->value);  
+    node->value = strdup(item);  
+}
+
+void insert_item(SLList* list, int index, char* item) {
+    myNode* toInsert = create_node(item);
+    if (index == 0) {
+        toInsert->next = list->head;
+        list->head = toInsert;
+    }
+    if (index == list->size) {
+        if (list->tail != 0) {
+            list->tail->next = toInsert;
+        }
+        list->tail = toInsert;
+    }
+    if (index > 0 && index < list->size) {
+        myNode* previous = get_node(list, index - 1);
+        toInsert->next = previous->next;
+        previous->next = toInsert;
+    }
+    list->size++;
+}
+
+void remove_item(SLList* list, int index) {
+    myNode* toRemove;
+    if (index == 0) {
+        toRemove = list->head;
+        list->head = toRemove->next;
+    } else {
+        myNode* previous = get_node(list, index - 1);
+        toRemove = previous->next;
+        previous->next = toRemove->next;
+        if (index == list->size - 1) {
+            list->tail = previous;
+        }
+    }
+    free(toRemove->value);  // Free the string
+    free(toRemove);  // Free the node
+    list->size--;
+}
+
+void printList(SLList* list) {
+    if (list->size == 0) {
+        printf("Nothing to print here!\n");
+    } else {
+        myNode* toPrint;
+        for (int i = 0; i < 3; i++) {
+            toPrint = get_node(list, i);
+            printf("Item %d = %s\n", i, toPrint->value);
+        }
+    }
+}
+
+void clear_list(SLList* list) {
+    myNode* current = list->head;
+    myNode* nextNode;
+    while (current != NULL) {
+        nextNode = current->next;
+        free(current->value);
+        free(current);
+        current = nextNode;
+    }
+    init_list(list); // Reinitialize the list
+}
+
+int choose_category(Game* game, SLList* list, int cat_index[MAX_CATEGORIES]) {
+
+    
+    if ((game->difficulty == EASY && !n1) || 
+        (game->difficulty == AVERAGE && !n2) || 
+        (game->difficulty == DIFFICULT && !n3)) {
+        for (int i = 0; i < MAX_CATEGORIES; i++) {
+            if (game->difficulty == EASY) {
+                cat_index[i] += 0;
+            } else if (game->difficulty == AVERAGE) {
+                cat_index[i] += 50;
+            } else if (game->difficulty == DIFFICULT) {
+                cat_index[i] += 100;
+            }
+        }
+    
         if (game->difficulty == EASY) {
-            cat_index[i] += 0; 
+            n1 = 1;
         } else if (game->difficulty == AVERAGE) {
-            cat_index[i] += 50; 
+            n2 = 1;
         } else if (game->difficulty == DIFFICULT) {
-            cat_index[i] += 100;
+            n3 = 1;
         }
     }
 
@@ -512,75 +599,86 @@ int choose_category(Game* game) {
         }
     }
 
-    for (int i = 0; i < 3; i++) {
-        if ((game->difficulty == EASY) && (used_easy_category[cat_index[i]]) && (cat_flg1 < 2)) {
-            if (cat_flg1 == 0) {
-                cat_index[i] = cat_index[3];
-            } else if (cat_flg1 == 1) {
-                cat_index[i] = cat_index[4];
-            }
-            cat_flg1++;
-        } else if ((game->difficulty == AVERAGE) && (used_average_category[cat_index[i]]) && (cat_flg2 < 2)) {
-            if (cat_flg2 == 0) {
-                cat_index[i] = cat_index[3];
-            } else if (cat_flg2 == 1) {
-                cat_index[i] = cat_index[4];
-            }
-            cat_flg2++;
-        } else if ((game->difficulty == DIFFICULT) && (used_hard_category[cat_index[i]]) && (cat_flg3 < 2)) {
-            if (cat_flg3 == 0) {
-                cat_index[i] = cat_index[3];
-            } else if (cat_flg3 == 1) {
-                cat_index[i] = cat_index[4];
-            }
-            cat_flg2++;
-        }
-    }
+    
 
+    
+
+    
+
+    
     clear_screen();
 
-    char formatted_string1[30]; // Buffer size should be enough to hold the name + spaces
-    int string_length1 = strlen(game->quizzes[50 * (game->difficulty)].level);
-    int spaces_to_add1 = 7 - string_length1;
-    snprintf(formatted_string1, sizeof(formatted_string1), "%*s%s%*s", spaces_to_add1/2, "", game->quizzes[50 * (game->difficulty)].level, spaces_to_add1/2, "");
+    char level[100]; 
 
-    char formatted_string2[30]; // Buffer size should be enough to hold the name + spaces
-    int string_length2 = strlen(game->quizzes[cat_index[0]].category);
-    int spaces_to_add2 = 22 - string_length2;
-    snprintf(formatted_string2, sizeof(formatted_string2), "%s%*s", game->quizzes[cat_index[0]].category, spaces_to_add2, "");
+    sprintf(level, "%s%*s", game->quizzes[cat_index[0]].level, 25 - strlen(game->quizzes[cat_index[0]].level), "");
+    // snprintf(level, sizeof(level), "%s%*s", game->quizzes[cat_index[0]].level, 25 - strlen(game->quizzes[cat_index[0]].level), "");
 
-    char formatted_string3[30]; // Buffer size should be enough to hold the name + spaces
-    int string_length3 = strlen(game->quizzes[cat_index[1]].category);
-    int spaces_to_add3 = 22 - string_length3;
-    snprintf(formatted_string3, sizeof(formatted_string3), "%s%*s", game->quizzes[cat_index[1]].category, spaces_to_add3, "");
-
-    char formatted_string4[30]; // Buffer size should be enough to hold the name + spaces
-    int string_length4 = strlen(game->quizzes[cat_index[2]].category);
-    int spaces_to_add4 = 22 - string_length4;
-    snprintf(formatted_string4, sizeof(formatted_string4), "%s%*s", game->quizzes[cat_index[2]].category, spaces_to_add4, "");
 
     
-    
-    if (game->difficulty == EASY) {
-        printf(show_category, formatted_string1, (!(used_easy_category[cat_index[0]])) ? formatted_string2 : "",
-                            (!(used_easy_category[cat_index[1]])) ? formatted_string3 : "",
-                            (!(used_easy_category[cat_index[2]])) ? formatted_string4 : "");
-    } else if (game->difficulty == AVERAGE) {
-        printf(show_category, formatted_string1, (!(used_average_category[cat_index[0]])) ? formatted_string2 : "",
-                            (!(used_average_category[cat_index[1]])) ? formatted_string3 : "",
-                            (!(used_average_category[cat_index[2]])) ? formatted_string4 : "");
-    } else if (game->difficulty == DIFFICULT) {
-        printf(show_category, formatted_string1, (!(used_hard_category[cat_index[0]])) ? formatted_string2 : "",
-                            (!(used_hard_category[cat_index[1]])) ? formatted_string3 : "",
-                            (!(used_hard_category[cat_index[2]])) ? formatted_string4 : "");
+
+    char category1[50], category2[50], category3[50];
+    char cat1[50], cat2[50], cat3[50];
+    myNode* toPrint;
+    for (int i = 0; (list->size > 3) ? (i < 3) : (i < list->size); i++) {
+        toPrint = get_node(list, i);
+        if (i == 0) {
+            strcpy(cat1, toPrint->value);
+            int spaces_to_add = 22 - strlen(cat1);
+            if (spaces_to_add < 0) spaces_to_add = 0; 
+
+            
+
+            sprintf(category1, "%s%*s", cat1, spaces_to_add, "");
+
+            
+        } else if (i == 1) {
+            strcpy(cat2, toPrint->value);
+            int spaces_to_add = 22 - strlen(cat2);
+            if (spaces_to_add < 0) spaces_to_add = 0; 
+
+            sprintf(category2, "%s%*s", cat2, spaces_to_add, "");
+        } else if (i == 2) {
+            strcpy(cat3, toPrint->value);
+            int spaces_to_add = 22 - strlen(cat3);
+            if (spaces_to_add < 0) spaces_to_add = 0; 
+
+            sprintf(category3, "%s%*s", cat3, spaces_to_add, "");
+        }
     }
+    
+
+
+
+
+
+    // char final_string[2048];
+    printf(show_category, level, category1, category2, category3);
+
+    
+
+
 
     char input = '0'; 
     do {
         input = getch();
     } while ((input != '1') && (input != '2') && (input != '3'));
 
-    return cat_index[input - '1'];
+    char item[50];
+    if (input == '1') {
+        strcpy(item, cat1);
+    } else if (input == '2') {
+        strcpy(item, cat2);
+    } else if (input == '3') {
+        strcpy(item, cat3);
+    }
+
+    remove_item(list, input - '1');    
+
+    for (int i = 0; i < MAX_CATEGORIES; i++) {
+        if (strcmp(item, game->quizzes[cat_index[i]].category) == 0) {
+            return cat_index[i];
+        }
+    }
 }
 
 void init_index(int *array, int size, int modulo, int multiple) {
@@ -618,21 +716,22 @@ void init_welcome_remarks(Game* game) {
     printf(welcome_screen1, formatted_name);
     press_continue();
 
-    clear_screen();
     puts(welcome_screen2);
     press_continue();
 
-    clear_screen();
     puts(welcome_screen3);
     press_continue();
 
-    clear_screen();
     puts(welcome_screen4);
     press_continue();
 
     mechanics:
-    printf("mechanics is here");
+
+    puts(mechanics1);
     press_continue();
+    puts(mechanics2);
+    press_continue();
+    puts(mechanics3);
             
 
     clear_screen();
@@ -643,10 +742,11 @@ void init_welcome_remarks(Game* game) {
     } while ((input != '2') && (input != '1'));
 
     if (input == '2') {
+        clear_screen();
         goto mechanics;
     }
 
-    clear_screen();
+    
             
             
     clear_screen();
@@ -676,39 +776,31 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                 game->clicked_powerup[3] = 1;
             }
 
-            system("cls");
+            clear_screen();
             puts(separator);
-            printf("    PLAYER NAME: %s", game->player.name);
-            add_spaces(17 + strlen(game->player.name), 45);
+            
+            char *header1 = NULL;
+            int header1_size = 0;
 
-            printf("      SCORE : %d", game->player.score);
-            int size = 0;
-            for(int j = game->player.score; j > 0 ; j/=10) {
-                size++;
-            }
-            add_spaces(size + 15, 40);
+            char *header2 = NULL;
+            int header2_size = 0;
 
-            printf("     LIVES : ");
-            for (int j = 0; j < game->player.lives; j++) {
-                printf("<3 ");
-            }
+            format_header1(&header1, &header1_size, game->player.name, game->player.score, game->player.lives);
+            format_header2(&header2, &header2_size, game->quizzes[que_index[i] + start_index].level, game->quizzes[que_index[i] + start_index].category, time_left, i+1);
+
+            printf("%s\n", header1);
+            printf("%s\n", header2);
+
+
+
+        
+
+            puts(separator);
+
+            printf("\n"); 
+            center_text(game->quizzes[que_index[i] + start_index].question, 75);
+
             printf("\n");
-
-            printf("    %s : %s", game->quizzes[que_index[i] + start_index].level, game->quizzes[que_index[i] + start_index].category);
-            add_spaces(7 + strlen(game->quizzes[que_index[i] + start_index].level) + strlen(game->quizzes[que_index[i] + start_index].category), 45);
-
-            printf("      TIMER: %02d", time_left);
-            add_spaces(15, 40);
-
-            printf("    QUESTION : %02d\n", i+1);
-
-            puts(separator);
-
-            printf("\n\n");
-            center_item(strlen(game->quizzes[que_index[i] + start_index].question));
-            printf("%s\n", game->quizzes[que_index[i] + start_index].question);
-
-            printf("\n\n");
 
             if(!(game->clicked_powerup[1]) && (game->used_powerup[1])) {
                 if (cht1) {
@@ -718,17 +810,21 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                         } 
                         if(opt_index[j] != del_index) {
                             if(opt_index[j] == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
-                                center_item(56);
-                                printf("------------------------------------------------------\n");
-                                printf("\t\t\t   \033[0;32m(%c)\n", 'A' + j);
-                                center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                                printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                                printf("                       ─────────────────────────────────────────────────────────────\n");
+                                char text[120];
+                                char options[120];
+                                snprintf(text, sizeof(text), "%*s\033[0;92m%s\033[0m%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                                snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                                center_text(options, 70);
+                                center_text(text, 70);
                             } else {
-                                center_item(56);
-                                printf("------------------------------------------------------\n");
-                                printf("\t\t\t   \033[0;31m(%c)\n", 'A' + j);
-                                center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                                printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                                printf("                       ─────────────────────────────────────────────────────────────\n");
+                                char text[120];
+                                char options[120];
+                                snprintf(text, sizeof(text), "%*s\033[0;91m%s\033[0m%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                                snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                                center_text(options, 70);
+                                center_text(text, 70);
                             }
                         }
                     }
@@ -739,11 +835,13 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                             del_index = rand() % 4;
                         } 
                         if(opt_index[j] != del_index) {
-                            center_item(56);
-                            printf("------------------------------------------------------\n");
-                            printf("\t\t\t   (%c)\n", 'A' + j);
-                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                            printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                            printf("                       ─────────────────────────────────────────────────────────────\n");
+                            char text[120];
+                            char options[120];
+                            snprintf(text, sizeof(text), "%*s%s%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                            snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                            center_text(options, 70);
+                            center_text(text, 70);
                         }
                     }
                 }
@@ -751,46 +849,52 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                 if (cht1) {
                     for(int j = 0; j < 4; j++) {
                         if(opt_index[j] == ((game->quizzes[que_index[i] + start_index].correct_answer[0][0]) - 'A')) {
-                            center_item(56);
-                            printf("------------------------------------------------------\n");
-                            printf("\t\t\t   \033[0;32m(%c)\n", 'A' + j);
-                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                            printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                            printf("                       ─────────────────────────────────────────────────────────────\n");
+                            char text[120];
+                            char options[120];
+                            snprintf(text, sizeof(text), "%*s\033[0;92m%s\033[0m%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                            snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                            center_text(options, 70);
+                            center_text(text, 70);
                         } else {
-                            center_item(56);
-                            printf("------------------------------------------------------\n");
-                            printf("\t\t\t   \033[0;31m(%c)\n", 'A' + j);
-                            center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                            printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                            printf("                       ─────────────────────────────────────────────────────────────\n");
+                            char text[120];
+                            char options[120];
+                            snprintf(text, sizeof(text), "%*s\033[0;91m%s\033[0m%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                            snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                            center_text(options, 70);
+                            center_text(text, 70);
                         }
                     }
-                } else {
+                } else {                                                                                                                      
                     for(int j = 0; j < 4; j++) {
-                        center_item(56);
-                        printf("------------------------------------------------------\n");
-                        printf("\t\t\t   (%c)\n", 'A' + j);
-                        center_item(strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]));
-                        printf("%s\n", game->quizzes[que_index[i] + start_index].option[opt_index[j]]);
+                        printf("                       ────────────────────────────────────────────────────────────────\n");
+                        char text[120];
+                        char options[120];
+                        snprintf(text, sizeof(text), "%*s%s%*s", (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "", game->quizzes[que_index[i] + start_index].option[opt_index[j]], (40 - strlen(game->quizzes[que_index[i] + start_index].option[opt_index[j]]))/2, "");
+                        snprintf(options, sizeof(options), "[%c]%*s", 'A' + j, 60, "");
+                        center_text(options, 70);
+                        center_text(text, 70);
+
                     }
                 }
             }
-            center_item(56);
-            printf("------------------------------------------------------\n\n");
+            printf("                       ────────────────────────────────────────────────────────────────\n");
             puts(separator);
 
-            size = 0;
+
+            char ar[150] = "";
+            char ray[150];
             for (int j = 0; j < 3; j++) {
-                if(!(game->used_powerup[pow_index[j]])) {
-                    size += strlen(game->powerups[pow_index[j]].name) + 8;
-                } 
+                if (!(game->used_powerup[pow_index[j]])) {
+                    // Build the string with the current powerup
+                    snprintf(ray, sizeof(ray), "%s    [%d]  %s", ar, j + 1, game->powerups[pow_index[j]].name);
+                    // Copy the new string back to ar
+                    strcpy(ar, ray);
+                }
             }
-            center_item(size);
-            for (int j = 0; j < 3; j++) {
-                if(!(game->used_powerup[pow_index[j]])) {
-                    printf("(%d) %s    ", j + 1, game->powerups[pow_index[j]].name);
-                } 
-            }
-            printf("\n");
+            // Center the resulting string and print it
+            center_text(ar, 110);
             puts(separator);
 
             if (kbhit()) {
@@ -809,7 +913,7 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                         answer = opt[opt_index[3]];
                     }
 
-                    if(is_correctanswer(answer, game->quizzes[que_index[i] + start_index])) {
+                    if(is_correct_answer(answer, game->quizzes[que_index[i] + start_index])) {
                         PlaySound(TEXT("assets/correct.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         system("COLOR A0");
 
@@ -823,9 +927,9 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                             } else if (game->difficulty == DIFFICULT) {
                                 game->player.score += (7 * time_left);
                             }
-                            if (!(game->clicked_powerup[4] && (game->used_powerup[4]))) {
-                                game->clicked_powerup[4] = 1;
-                            }
+                        }
+                        if (!(game->clicked_powerup[4]) && (game->used_powerup[4])) {
+                            game->clicked_powerup[4] = 1;
                         }
                         answer_chosen = 1;
                     } else {
@@ -838,12 +942,18 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
 
                         if (!(game->clicked_powerup[4]) && (game->used_powerup[4])) {
                             game->clicked_powerup[4] = 1;
+                            Sleep(600);
+                            system("COLOR 07");
+                            Sleep(200);
+                            PlaySound(TEXT("assets/play.wav"), NULL, SND_FILENAME | SND_ASYNC);
                         } else {
                             game->player.lives--;
                             answer_chosen = 1;
                         }
                     }
-                } else if ((user_answer >= '1') && (user_answer <= '3')) {
+                    
+                    goto reset;
+                } else if ((user_answer == '1') || (user_answer == '2') || (user_answer == '3')) {
                     if (user_answer == '1') {
                         game->used_powerup[pow_index[0]] = 1;  
                     } else if (user_answer == '2') {
@@ -851,9 +961,10 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                     } else if (user_answer == '3') {
                         game->used_powerup[pow_index[2]] = 1;  
                     }
+                    continue;
                 } else if (user_answer == 1) {
                     PlaySound(NULL, 0, 0);
-                    system("cls");
+                    clear_screen();
                     printf("Enter cheat code: ");
                     char cheat[20];
                     scanf("%19s", cheat);
@@ -877,11 +988,15 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                     }
                     PlaySound(TEXT("assets/play.wav"), NULL, SND_FILENAME | SND_ASYNC);
                     continue;                     
+                } else {
+                    continue;
                 }
-
             }
 
+            reset:
             Sleep(1000);
+            system("COLOR 07");
+
 
             if ((!(game->clicked_powerup[0]) && (game->used_powerup[0])) || cht2) {
                 time_left;
@@ -889,19 +1004,16 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
                 time_left--;
             }
 
-            system("COLOR 07");
+            
 
             if (time_left == 0) {
                 game->player.lives--;
             }
 
+            
             if ((game->player.lives == 0)) {
                 return;
             }
-        }
-
-        if ((game->player.score) > 17500) {
-            return;
         }
 
         if (!(game->clicked_powerup[0]) && (game->used_powerup[0])) {
@@ -916,7 +1028,7 @@ void play_quiz(Game* game, int start_index, int *que_index, int *pow_index, int 
     }
 }
 
-int is_correctanswer(char user_answer, Quiz quiz) {
+int is_correct_answer(char user_answer, Quiz quiz) {
     for(int i = 0; i < 4; i++) {
         if(user_answer == quiz.correct_answer[i][0]) {
             return 1;
@@ -933,438 +1045,533 @@ int init_timer(Game* game) {
 }
 
 void press_continue() {
+
     char input = '0';
     do {
         input = getch();
     } while ((input != ' '));
+
+    clear_screen();
 }
 
-char* separator = "==============================================================================================================";
+void format_header1(char **buffer, int *size, const char *player_name, int score, int lives) {
+    const char *livesDisplay = lives == 3 ? "❤️ ❤️ ❤️" : (lives == 2 ? "❤️ ❤️ \e[0;93m💔\e[0m" : "❤️ 💔 💔");
+    *size = snprintf(NULL, 0, "%*sPLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
+                     4, "", player_name, 
+                     49 - 4 - (int)strlen(player_name) - 14, "", 
+                     score, 
+                     42 - 9 - 4, "", 
+                     livesDisplay) + 1; // +1 for null terminator
 
-char* title_screen =    "==============================================================================================================\n"
+    *buffer = (char *)realloc(*buffer, *size);
+    if (*buffer == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+
+    snprintf(*buffer, *size, "%*sPLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
+             4, "", player_name, 
+             49 - 4 - (int)strlen(player_name) - 14, "", 
+             score, 
+             42 - 9 - 4, "", 
+             livesDisplay);
+}
+void format_header2(char **buffer, int *size, const char *level, const char *category, int time_left, int question_number) {
+    *size = snprintf(NULL, 0, "%*s%s : %s%*sTIMER : %02d%*sQUESTION : %02d%*s", 
+                     4, "", 
+                     level, category, 
+                     47 - 4 - (int)strlen(level) - (int)strlen(category), "", 
+                     time_left, 
+                     45 - 4 - 8, "", 
+                     question_number, 4, "") + 1; // +1 for null terminator
+
+    *buffer = (char *)realloc(*buffer, *size);
+    if (*buffer == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+
+    snprintf(*buffer, *size, "%*s%s : %s%*sTIMER : %02d%*sQUESTION : %02d%*s", 
+             4, "", 
+             level, category, 
+             47 - 4 - (int)strlen(level) - (int)strlen(category), "", 
+             time_left, 
+             45 - 4 - 8, "", 
+             question_number, 4, "");
+}
+
+void center_text (char* text, int len) {
+    int textLength = strlen(text);
+    int screen_width = 110;
+    int totalLines = (textLength + len - 1) / len; 
+
+    for (int i = 0; i < totalLines; i++) {
+        int start = i * len;
+        int end = start + len;
+        if (end > textLength) {
+            end = textLength;
+        }
+        int lineLength = end - start;
+
+        int spaces = (screen_width - lineLength) / 2;
+
+        for (int j = 0; j < spaces; j++) {
+            printf(" ");
+        }
+
+        for (int j = start; j < end; j++) {
+            printf("%c", text[j]);
+        }
+        printf("\n");
+    }
+}
+
+char* separator = "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m";
+                                        
+char* title_screen1 =    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                         "\n"
-                        "      .-. .-.\n"
-                        "     #++#+#++#=======================================================================================\n"
-                        "       -+++-                                                                                        |\n"
-                        "    +    .                                       J&J PRESENTS                                       |\n"
-                        "         |                                                                                          |    *\n" 
-                        "         |      #######  ##     ## #### ########    ##     ##  #######  #### ##    ##  #######      |\n"
-                        "  +      |     ##     ## ##     ##  ##      ##      #### #### ##     ##  ##  ##  ##   ##     ##     |\n"
-                        "         |     ##     ## ##     ##  ##     ##       ## ### ## ##     ## ##   #####    ##     ##     |   +\n"
-                        "      *  |     ##   ###  ##     ##  ##    ##        ##     ## ##     ##      ##  ##   ##     ##     |\n"
-                        "         |      ##### ##  #######  #### ########    ##     ##  #######       ##    ##  #######      |\n"
-                        "         |                                                                                          |      *\n"
-                        "  *      |                                                                                          |\n"
-                        "         |                          ------------------  ------------------                        -+--.\n"
-                        "         |                           [1] START           [2] ABOUT                              .-+++++-\n"
-                        "         |                          ------------------  ------------------                    .++++--.-+-+.\n"
-                        "   .--.  |  .--.                    ------------------  ------------------                   +--+-+--------.\n"
-                        "  .+ +.  |  .+ +.                    [3] LEADERBOARDS    [4] EXIT                          .-++----------+---\n"
-                        "  -+  ++-#-++   +                   ------------------  ------------------                  .+#-+#########..\n"
-                        " -+   @     @   +-                                                                                --++-\n" 
-                        ".+-+-.   #    .+-+.===============================================================================--++-\n"   
-                        ".#+              +#.                 A CMSC 21 FINAL PROJECT BY JOHN & JHUN                     .++#++++.\n"            
-                        "==============================================================================================================\n";
+                        "      \n"                                                                                                       
+                        "      \e[0;93m✦\e[0m                                          J&J PRESENTS                                          \e[0;93m✦\e[0m      \n"
+                        "      \n" 
+                        "                     \e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗   \e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╗\e[0;95m███████\e[0;92m╗    \e[0;95m███\e[0;92m╗   \e[0;95m███\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗  \e[0;95m██\e[0;92m╗ \e[0;95m██████\e[0;92m╗                     \n"
+                        "          \e[0;93m✦\e[0m         \e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║╚══\e[0;95m███\e[0;92m╔╝    \e[0;95m████\e[0;92m╗ \e[0;95m████\e[0;92m║\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║ \e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗         \e[0;93m✦\e[0m\n"
+                        "                    \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║  \e[0;95m███\e[0;92m╔╝     \e[0;95m██\e[0;92m╔\e[0;95m████\e[0;92m╔\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╔╝ \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║                    \n"
+                        "                    \e[0;95m██\e[0;92m║\e[0;95m▄▄ ██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║ \e[0;95m███\e[0;92m╔╝      \e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔═\e[0;95m██\e[0;92m╗ \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║                    \n"
+                        "                    \e[0;92m╚\e[0;95m██████\e[0;92m╔╝╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m███████\e[0;92m╗    \e[0;95m██\e[0;92m║ ╚═╝ \e[0;95m██\e[0;92m║╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m╗╚\e[0;95m██████\e[0;92m╔╝                    \n"
+                        "                     \e[0;92m╚══\e[0;95m▀▀\e[0;92m═╝  ╚═════╝ ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝\e[0m \n"
+                        "   \e[0;93m✦\e[0m                                                                                                     \e[0;93m✦\e[0m   \n"
+                        "                                                                                                     \e[0;93m_ \e[0;93m\"\e[0;93m _\e[0m \n"
+                        "                                ┌───────────────────┐    ┌───────────────────┐                      \e[0;93m(_\\\e[0;93m|\e[0;93m/_)\e[0m \n"
+                        "                                │ [1] START         │    │ [2] ABOUT         │         \e[0;91m_      _\e[0m      \e[0;93m(/\e[0;93m|\e[0;93m\\)\e[0m\n"
+                        "     \e[0;93m                __  \e[0m       └───────────────────┘    └───────────────────┘       \e[0;91m_(_)_  _(_)_\e[0m\n"
+                        "     \e[0;93m               / _) \e[0m       ┌───────────────────┐    ┌───────────────────┐      \e[0;91m(_)\e[0;93m@\e[0;91m(_)(_)\e[0;93m@\e[0;91m(_)\e[0m\n"
+                        "     \e[0;93m      _.----._/ /   \e[0m       │ [3] LEADERBOARDS  │    │ [4] EXIT          │       \e[0;91m(_)\e[0;92m\\    \e[0;91m(_)\e[0;92m\\\e[0m    \n"
+                        "     \e[0;93m     /         /    \e[0m       └───────────────────┘    └───────────────────┘      \e[0;91m{{}  \e[0;92m|  \e[0;91m{{}  \e[0;92m|  \e[0;91m{{}\e[0m\n"
+                        "     \e[0;93m  __/ (  | (  |     \e[0m                                                           \e[0;92m~Y~(\\|/)~Y~(\\|/)~Y~\e[0m\n"
+                        "     \e[0;93m /__.-'\\_\\-/_/ \\ \e[0m                                                              \e[0;92m\\|/ \\|/ \\|/ \\|/ \\|/\e[0m\n"
+                        "\e[0;92m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\e[0m\n"               
+                        "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"   
+                        "                                    \e[0mA CMSC 21 FINAL PROJECT BY JOHN & JHUN                                 \n"            
+                        "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+                        
+
+char* title_screen2 =    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                         "\n"
+                         "      \n"                                                                                                       
+                         "      \e[0;93m✧\e[0m                                          J&J PRESENTS                                          \e[0;93m✧\e[0m      \n"
+                         "      \n" 
+                         "                     \e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗   \e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╗\e[0;95m███████\e[0;92m╗    \e[0;95m███\e[0;92m╗   \e[0;95m███\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗  \e[0;95m██\e[0;92m╗ \e[0;95m██████\e[0;92m╗                     \n"
+                         "          \e[0;93m✧\e[0m         \e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║╚══\e[0;95m███\e[0;92m╔╝    \e[0;95m████\e[0;92m╗ \e[0;95m████\e[0;92m║\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║ \e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗         \e[0;93m✧\e[0m\n"
+                         "                    \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║  \e[0;95m███\e[0;92m╔╝     \e[0;95m██\e[0;92m╔\e[0;95m████\e[0;92m╔\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╔╝ \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║                    \n"
+                         "                    \e[0;95m██\e[0;92m║\e[0;95m▄▄ ██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║ \e[0;95m███\e[0;92m╔╝      \e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔═\e[0;95m██\e[0;92m╗ \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║                    \n"
+                         "                    \e[0;92m╚\e[0;95m██████\e[0;92m╔╝╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m███████\e[0;92m╗    \e[0;95m██\e[0;92m║ ╚═╝ \e[0;95m██\e[0;92m║╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m╗╚\e[0;95m██████\e[0;92m╔╝                    \n"
+                         "                     \e[0;92m╚══\e[0;95m▀▀\e[0;92m═╝  ╚═════╝ ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝\e[0m \n"
+                         "   \e[0;93m✧\e[0m                                                                                                     \e[0;93m✧\e[0m   \n"
+                         "                                                                                                       \e[0;93m\"\e[0m \n"                                                                        
+                         "                                ┌───────────────────┐    ┌───────────────────┐                       \e[0;93m(\\\e[0;93m|\e[0;93m/)\e[0m  \n"
+                         "                                │ [1] START         │    │ [2] ABOUT         │              \e[0;91m_      _\e[0m  \e[0;93m⇂\e[0;93m|\e[0;93m⇃\e[0m\n"
+                         "      \e[0;93m               __ \e[0m        └───────────────────┘    └───────────────────┘            \e[0;91m_(_)_  _(_)_\e[0m\n"
+                         "      \e[0;93m              / _)\e[0m        ┌───────────────────┐    ┌───────────────────┐           \e[0;91m(_)\e[0;93m@\e[0;91m(_)(_)\e[0;93m@\e[0;91m(_)\e[0m\n"
+                         "      \e[0;93m     _.----._/ /  \e[0m        │ [3] LEADERBOARDS  │    │ [4] EXIT          │            \e[0;92m/\e[0;91m(_)    \e[0;92m/\e[0;91m(_)\e[0m     \n"
+                         "      \e[0;93m    /         /   \e[0m        └───────────────────┘    └───────────────────┘      \e[0;91m{{}  \e[0;92m|  \e[0;91m{{}  \e[0;92m|  \e[0;91m{{}\e[0m\n"
+                         "      \e[0;93m __/ (  | (  |    \e[0m                                                            \e[0;92m~Y~(\\|/)~Y~(\\|/)~Y~\e[0m\n"
+                         "      \e[0;93m/__.-/_/---\\_\\  \e[0m                                                              \e[0;92m\\|/ \\|/ \\|/ \\|/ \\|/\e[0m \n"
+                         "\e[0;92m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"               
+                         "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"   
+                         "                                    \e[0mA CMSC 21 FINAL PROJECT BY JOHN & JHUN                               \n"            
+                         "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
 
-char* leaderboards =    "   ##      #######    ##    #######  ####### #######  #######   ######     ##    #######  #######   #####     \n"
-                        "   ##      ##        ####   ##    ## ##      ##    ## ##    ## ##    ##   ####   ##    ## ##    ## ##         \n"
-                        "   ##      #####   ##    ## ##    ## #####   #######  #######  ##    ## ##    ## #######  ##    ##  #####     \n"
-                        "   ##      ##      ######## ##    ## ##      ##  ##   ##    ## ##    ## ######## ##  ##   ##    ##      ##    \n"
-                        "   ####### ####### ##    ## #######  ####### ##    ## #######   ######  ##    ## ##    ## #######   #####     \n";
 
-char* welcome_screen1 =     "==============================================================================================================\n"
-                            " \n"                                               
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"                               
+char* leaderboards =    "\n"
+                        "      \e[0;95m██\e[0;92m╗     \e[0;95m███████\e[0;92m╗ \e[0;95m█████\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m███████\e[0;92m╗\e[0;95m██████\e[0;92m╗ \e[0;95m██████\e[0;92m╗  \e[0;95m██████\e[0;92m╗  \e[0;95m█████\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m███████\e[0;92m╗\n"
+                        "      \e[0;95m██\e[0;92m║     \e[0;95m██\e[0;92m╔════╝\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔════╝\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔════╝\n"
+                        "      \e[0;95m██\e[0;92m║     \e[0;95m█████\e[0;92m╗  \e[0;95m███████\e[0;92m║\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╗  \e[0;95m██████\e[0;92m╔╝\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m███████\e[0;92m║\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m███████\e[0;92m╗\n"
+                        "      \e[0;95m██\e[0;92m║     \e[0;95m██\e[0;92m╔══╝  \e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══╝  \e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║╚════\e[0;95m██\e[0;92m║\n"
+                        "      \e[0;95m███████\e[0;92m╗\e[0;95m███████\e[0;92m╗\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██████\e[0;92m╔╝\e[0;95m███████\e[0;92m╗\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██████\e[0;92m╔╝╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██████\e[0;92m╔╝\e[0;95m███████\e[0;92m║\n"
+                        "      \e[0;92m╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝\e[0m\n"
+                        "\n";
+
+char* welcome_screen1 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                            " \n"                                                       
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n" 
                             " \n"
                             " \n" 
-                            "                       ==*** *** *** ***** ** *****===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                  HELLO, PLAYER %s                  |\n"
-                            "                       |      I'M THE ONE WHO CAN'T BE WRONG, THE QUIZ MASTER.       |\n"
-                            "                       |      AND I'M HERE TO SEE IF YOU HAVE WHAT IT TAKES TO       |\n"
-                            "                       |                      CONQUER MY GAME.                       |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═*** *** *** ***** ** *****══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                  HELLO, PLAYER %s                  ║\n"
+                            "                       ║      I'M THE ONE WHO CAN'T BE WRONG, THE QUIZ MASTER.       ║\n"
+                            "                       ║      AND I'M HERE TO SEE IF YOU HAVE WHAT IT TAKES TO       ║\n"
+                            "                       ║                      CONQUER MY GAME.                       ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* welcome_screen2 =     "==============================================================================================================\n"
+char* welcome_screen2 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                          HMMMM...                           |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                          HMMMM...                           ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* welcome_screen3 =     "==============================================================================================================\n"
+char* welcome_screen3 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                          HMMMM...                           |\n"
-                            "                       |                         NEVERMIND.                          |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                          HMMMM...                           ║\n"
+                            "                       ║                         NEVERMIND.                          ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* welcome_screen4 =     "==============================================================================================================\n"
+char* welcome_screen4 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                          MOVING ON.                         |\n"
-                            "                       |          BEFORE WE START, I WANT YOU TO READ ABOUT          |\n"
-                            "                       |                     HOW MY GAME WORKS.                      |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                          MOVING ON.                         ║\n"
+                            "                       ║          BEFORE WE START, I WANT YOU TO READ ABOUT          ║\n"
+                            "                       ║                     HOW MY GAME WORKS.                      ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* welcome_screen5 =     "==============================================================================================================\n"
+char* welcome_screen5 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                HMM... YOU'VE READ QUITE FAST                |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                HMM... YOU'VE READ QUITE FAST                ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
-                            "                                        [1] CONTINUE    [2] READ AGAIN                                        \n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                            "                                        [1] CONTINUE    [2] READ AGAIN \n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* welcome_screen6 =     "==============================================================================================================\n"
+char* welcome_screen6 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |           YOU ARE NOW READY TO TAKE MY CHALLENGE.           |\n"
-                            "                       |   UNLOCK YOUR POTENTIAL AND BEAT ALL OF MY TOP 3 SCORERS.   |\n"
-                            "                       |                          GOODLUCK!                          |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║           YOU ARE NOW READY TO TAKE MY CHALLENGE.           ║\n"
+                            "                       ║   UNLOCK YOUR POTENTIAL AND BEAT ALL OF MY TOP 3 SCORERS.   ║\n"
+                            "                       ║                          GOODLUCK!                          ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
 
-char* easy_remark1 =     "==============================================================================================================\n"
+char* easy_remark1 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |  SINCE YOU ARE BEGINNER, I'LL START AN EASY ROUND FOR YOU   |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║  SINCE YOU ARE BEGINNER, I'LL START AN EASY ROUND FOR YOU   ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* show_category =     "==============================================================================================================\n"
+char* show_category =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |                CHOOSE A CATEGORY - %s                   |\n"
-                            "                       |            [1] %s                       |\n"
-                            "                       |            [2] %s                       |\n"
-                            "                       |            [3] %s                       |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║                CHOOSE A CATEGORY - %s║\n"
+                            "                       ║            [1] %s                       ║\n"
+                            "                       ║            [2] %s                       ║\n"
+                            "                       ║            [3] %s                       ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
-                            "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                            "                                              CHOOSE A CATEGORY.\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* easy_remark2 =     "==============================================================================================================\n"
+char* easy_remark2 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |          WOAAHHH! IS THIS REALLY YOUR FIRST TIME?           |\n"
-                            "                       |      I THINK YOU ARE NO BEGINNER AT ALL. LET'S PROCEED      |\n"
-                            "                       |      TO THE NEXT CATEGORY AND TEST THAT LUCK OF YOURS.      |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║          WOAAHHH! IS THIS REALLY YOUR FIRST TIME?           ║\n"
+                            "                       ║      I THINK YOU ARE NO BEGINNER AT ALL. LET'S PROCEED      ║\n"
+                            "                       ║      TO THE NEXT CATEGORY AND TEST THAT LUCK OF YOURS.      ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* average_remark1 =     "==============================================================================================================\n"
+char* average_remark1 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |        CONGRATULATIONS ON REACHING A SCORE OF 2000!         |\n"
-                            "                       |             I GUESS LADY'S LUCK ON YOUR SIDE :)             |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║        CONGRATULATIONS ON REACHING A SCORE OF 2000!         ║\n"
+                            "                       ║             I GUESS LADY'S LUCK ON YOUR SIDE :)             ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* average_remark2 =     "==============================================================================================================\n"
+char* average_remark2 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |    AS A REWARD FOR YOUR WIT, I'LL ADJUST THE FOLLOWING      |\n"
-                            "                       |                   LEVEL : EASY -> AVERAGE                   |\n"
-                            "                       |                   TIMER : 30   -> 45                        |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║    AS A REWARD FOR YOUR WIT, I'LL ADJUST THE FOLLOWING      ║\n"
+                            "                       ║                   LEVEL : EASY -> AVERAGE                   ║\n"
+                            "                       ║                   TIMER : 30   -> 45                        ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* average_remark3 =     "==============================================================================================================\n"
+char* average_remark3 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |          YOU REALLY WANT TO DOMINATE MY GAME, HUH?          |\n"
-                            "                       |      LET'S PROCEED TO THE NEXT CATEGORY AND SEE IF YOU      |\n"
-                            "                       |                       CAN STILL SMILE.                      |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║          YOU REALLY WANT TO DOMINATE MY GAME, HUH?          ║\n"
+                            "                       ║      LET'S PROCEED TO THE NEXT CATEGORY AND SEE IF YOU      ║\n"
+                            "                       ║                       CAN STILL SMILE.                      ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* difficult_remark1 =     "==============================================================================================================\n"
+char* difficult_remark1 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |        CONGRATULATIONS ON REACHING A SCORE OF 6000!         |\n"
-                            "                       |        I NEVER THOUGHT YOU CAN GO THIS FAR. MY BAD.         |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║        CONGRATULATIONS ON REACHING A SCORE OF 6000!         ║\n"
+                            "                       ║        I NEVER THOUGHT YOU CAN GO THIS FAR. MY BAD.         ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
 
-char* difficult_remark2 =     "==============================================================================================================\n"
+char* difficult_remark2 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |    AS A REWARD FOR YOUR WIT, I'LL ADJUST THE FOLLOWING      |\n"
-                            "                       |                   LEVEL : AVERAGE -> DIFFICULT              |\n"
-                            "                       |                   TIMER : 45      -> 60                     |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║    AS A REWARD FOR YOUR WIT, I'LL ADJUST THE FOLLOWING      ║\n"
+                            "                       ║                   LEVEL : AVERAGE -> DIFFICULT              ║\n"
+                            "                       ║                   TIMER : 45      -> 60                     ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* difficult_remark3 =     "==============================================================================================================\n"
+char* difficult_remark3 =     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             " \n"                                        
-                            "                                                                ....\n"
-                            "                                                              .:++++\n"
-                            "                                                             :++++++\n"
-                            "                                                           -+++++=. \n"
-                            "                                          ++++.         .=+++++=    \n"
-                            "                                          ++++=-:      -==+++=::    \n"
-                            "                                           .==++++=.:=++++=:        \n"
-                            "                                              =+++++++++=:          \n"
-                            "                                                :++++++             \n"
-                            "                                                  :+=.              \n"
+                            "                                                             #######\n"  
+                            "                                                           #######  \n"  
+                            "                                                          ######    \n"  
+                            "                                                        ######      \n"  
+                            "                                             ###       #####        \n"  
+                            "                                             ####     ####          \n"  
+                            "                                              ##### #####           \n"  
+                            "                                               ########             \n"  
+                            "                                                 #####              \n"
                             " \n"
                             " \n" 
-                            "                       ==THE ONE WHO CAN'T BE WRONG===================================\n"
-                            "                       |                                                             |\n"
-                            "                       |    ONCE YOU YOU'VE REACHED 17,500. I'LL RECOGNISE YOU AS    |\n"
-                            "                       |                   A NEW WINNER. HANG IN THERE!              |\n"
-                            "                       |                                                             |\n"
-                            "                       ===============================================================\n"
+                            "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
+                            "                       ║                                                             ║\n"
+                            "                       ║    ONCE YOU YOU'VE REACHED 17,500. I'LL RECOGNISE YOU AS    ║\n"
+                            "                       ║                   A NEW WINNER. HANG IN THERE!              ║\n"
+                            "                       ║                                                             ║\n"
+                            "                       ╚═════════════════════════════════════════════════════════════╝\n"
                             "\n"
-                            "==============================================================================================================\n"
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                             "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
-                            "==============================================================================================================\n";
+                            "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-
-char* lose_screen = "==============================================================================================================\n"
+char* lose_screen = "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                     "\n"
-                    "             ######      ###    ##     ## ########     #######  ##     ## ######## ########  ####\n"
-                    "            ##         ##   ##  #### #### ##          ##     ## ##     ## ##       ##     ## ####\n"
-                    "            ##   #### ##     ## ## ### ## ######      ##     ## ##     ## ######   ########   ## \n"
-                    "            ##    ##  ######### ##     ## ##          ##     ##  ##   ##  ##       ##   ##       \n"
-                    "             ######   ##     ## ##     ## ########     #######     ###    ######## ##     ## ####\n"
+                    "\n"
+                    "                    \e[0;95m██████\e[0;92m╗  \e[0;95m█████\e[0;92m╗ \e[0;95m███\e[0;92m╗   \e[0;95m███\e[0;92m╗\e[0;95m███████\e[0;92m╗ \e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗   \e[0;95m██\e[0;92m╗\e[0;95m███████\e[0;92m╗\e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗\n"
+                    "                   \e[0;95m██\e[0;92m╔════╝ \e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m████\e[0;92m╗ \e[0;95m████\e[0;92m║\e[0;95m██\e[0;92m╔════╝\e[0;95m██\e[0;92m╔═══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔════╝\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║\n"
+                    "                   \e[0;95m██\e[0;92m║  \e[0;95m███\e[0;92m╗\e[0;95m███████\e[0;92m║\e[0;95m██\e[0;92m╔\e[0;95m████\e[0;92m╔\e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╗  \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╗  \e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║\n"
+                    "                   \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══╝  \e[0;95m██\e[0;92m║   \e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╗ \e[0;95m██\e[0;92m╔╝\e[0;95m██\e[0;92m╔══╝  \e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗╚═╝\n"
+                    "                   \e[0;92m╚\e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║ ╚═╝ \e[0;95m██\e[0;92m║\e[0;95m███████\e[0;92m╗╚\e[0;95m██████\e[0;92m╔╝ ╚\e[0;95m████\e[0;92m╔╝ \e[0;95m███████\e[0;92m╗\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╗\n"
+                    "                    \e[0;92m╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝ ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝\e[0m\n"
+                    "\n"
                     "\n"
                     "                              \"SCORES DOES NOT DEFINE WHO WE ARE. JUST GIVE UP.\"\n\n"
                     "                         --SUMMARY---------------------------------------------\n"
@@ -1373,16 +1580,19 @@ char* lose_screen = "===========================================================
                     "                           RANKING :   %d / %d\n"
                     "                         ------------------------------------------------------\n"
                     "\n"
-                    "                                        [1] ISA PA     [2] SUKO NA\n\n"
-                    "==============================================================================================================\n";
+                    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                    "                                        [1] ISA PA     [2] SUKO NA\n"
+                    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
 
-char* win_screen = "==============================================================================================================\n"
+char* win_screen = "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
                     "\n"
-                    "                          ##      ## #### ##    ## ##    ## ######## ########  ####                           \n"
-                    "                          ##  ##  ##  ##  ####  ## ####  ## ##       ##     ## ####                           \n"
-                    "                          ##  ##  ##  ##  ## ## ## ## ## ## ######   ########   ##                            \n"
-                    "                          ##  ##  ##  ##  ##  #### ##  #### ##       ##   ##                                  \n"
-                    "                           ###  ###  #### ##    ## ##    ## ######## ##     ## ####                           \n"
+                    "\n"
+                    "                           \e[0;95m██\e[0;92m╗    \e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m╗\e[0;95m███\e[0;92m╗   \e[0;95m██\e[0;92m╗\e[0;95m███\e[0;92m╗   \e[0;95m██\e[0;92m╗\e[0;95m███████\e[0;92m╗\e[0;95m██████\e[0;92m╗ \e[0;95m██\e[0;92m╗\n"
+                    "                           \e[0;95m██\e[0;92m║    \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║\e[0;95m████\e[0;92m╗  \e[0;95m██\e[0;92m║\e[0;95m████\e[0;92m╗  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔════╝\e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║\n"
+                    "                           \e[0;95m██\e[0;92m║ \e[0;95m█\e[0;92m╗ \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔\e[0;95m██\e[0;92m╗ \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔\e[0;95m██\e[0;92m╗ \e[0;95m██\e[0;92m║\e[0;95m█████\e[0;92m╗  \e[0;95m██████\e[0;92m╔╝\e[0;95m██\e[0;92m║\n"
+                    "                           \e[0;95m██\e[0;92m║\e[0;95m███\e[0;92m╗\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║╚\e[0;95m██\e[0;92m╗\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╔══╝  \e[0;95m██\e[0;92m╔══\e[0;95m██\e[0;92m╗╚═╝\n"
+                    "                           \e[0;92m╚\e[0;95m███\e[0;92m╔\e[0;95m███\e[0;92m╔╝\e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m║ ╚\e[0;95m████\e[0;92m║\e[0;95m██\e[0;92m║ ╚\e[0;95m████\e[0;92m║\e[0;95m███████\e[0;92m╗\e[0;95m██\e[0;92m║  \e[0;95m██\e[0;92m║\e[0;95m██\e[0;92m╗\n"
+                    "                           \e[0;92m ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝\e[0m\n"
                     "\n"
                     "                                           \"WELL DONE. WINNERRRRR!\"\n"
                     "                         --SUMMARY---------------------------------------------\n"
@@ -1391,13 +1601,118 @@ char* win_screen = "============================================================
                     "                           RANKING :   %d / %d\n"
                     "                         ------------------------------------------------------\n"
                     "\n"
-                    "                                        [1] ISA PA     [2] SUKO NA\n\n"
-                    "==============================================================================================================\n";  
+                    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                    "                                        [1] ISA PA    [2] AYAW NA\n"
+                    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";  
 
-char* about_screen = "==============================================================================================================\n"
+char* about_screen1 = "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
                      "                                                 HEY Y'ALL                                                    \n"
                      "                         THIS GAME WAS MADE BY LESTER AND MERL AS PROJECT IN CMSC 21                          \n"
-                     "==============================================================================================================\n"
-                     "                                             Press 1 to Go Back                                               \n"
-                     "==============================================================================================================\n";
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+char* no_score_leaderboard =    "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                                "                                                                                                              \n"
+                                "                           NO ONE PLAYED SO FAR. PLAY NOW TO BE GAME FIRST RANKER.                            \n"
+                                "                                                                                                              \n"
+                                "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                                "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                                "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+
+                     
+
+char* about_screen2 = "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                                                                                              \n"
+                     "                                           WHAT IS THIS ALL ABOUT?                                            \n"
+                     "\n"
+                     "        ╔════════════════════════════════════════════════════════════════════════════════════════════╗        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ║    QUIZ MO KO CHALLENGES YOUR KNOWLEDGE AND INTUITION WITH MULTIPLE CHOICES ACROSS         ║        \n"
+                     "        ║    VARIOUS CATEGORIES. AND GUESS WHAT? YOU'RE NOT ALONE IN THIS. A ZEALOUS GAME MASTER     ║        \n"
+                     "        ║    IS ALWAYS THERE TO WELCOME YOU AND KEEP THE ENERGY HIGH THROUGHOUT THE GAME.            ║        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ╚════════════════════════════════════════════════════════════════════════════════════════════╝        \n"
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+char* mechanics1 =  "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                                                                                              \n"
+                     "                                              GENERAL MECHANICS                                               \n"
+                     "                                                                                                              \n"
+                     "        ╔════════════════════════════════════════════════════════════════════════════════════════════╗        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ║    1) THE GAME SHALL CONSIST OF THREE CONSECUTIVE LEVELS: EASY, AVERAGE, AND DIFFICULT.    ║        \n"
+                     "        ║    2) AT THE START OF THE GAME, THE PLAYERS ARE ASKED TO INPUT THEIR NAME. THIS WILL BE    ║        \n"
+                     "        ║       USE TO RECOGNIZE ACHIEVEMENT OF THE PLAYERS AT THE END OF THE GAME.                  ║        \n"
+                     "        ║    3) AFTER THE PLAYER INPUT THERE NAME, THEY WILL BE GIVEN THREE RANDOM CATEGORIES TO     ║        \n"
+                     "        ║       TO CHOOSE AT. AS OF NOW, THE  ONLY CATEGORY AVAILABLE ARE: MATHEMATICS, SCIENCE,     ║        \n"
+                     "        ║       COMPUTER SCIENCE, GEOGRAPHY, AND HISTORY AND LITERATURE. FOR EACH CATEGORY THERE     ║        \n"
+                     "        ║       EXISTS TEN MULTIPLE QUESTIONS THAT WILL BE ANSWERED BY THE PLAYERS.                  ║        \n"
+                     "        ║    4) BY DEFAULT, THE PLAYER WILL HAVE THREE LIVES AND WILL BE BE GIVEN A THREE RANDOM     ║        \n"
+                     "        ║       POWER-UPS THAT WILL HELP THEM THROUGHOUT THE GAME.                                   ║        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ╚════════════════════════════════════════════════════════════════════════════════════════════╝        \n"
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+char* mechanics2 =  "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                                                                                              \n"
+                     "                                              GENERAL MECHANICS                                               \n"
+                     "                                                                                                              \n"
+                     "        ╔════════════════════════════════════════════════════════════════════════════════════════════╗        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ║    5) AFTER CHOOSING A CATEGORY, THE QUESTIONS UNDER EACH CATEGORY WILL BE PRESENTED,      ║        \n"
+                     "        ║       AND THEY WILL PRESS THEIR ANSWERS FROM A TO D.                                       ║        \n"
+                     "        ║    6) EACH CORRECT ANSWER WILL BE AWARDED WITH CORRESPONDING POINTS AND                    ║        \n"
+                     "        ║       ANSWERING INCORRECTLY WILL RESULT IN LOSING A LIFE. EACH QUESTION SHALL BE TIMED,    ║        \n"
+                     "        ║       AND THE LESS TIME CONSUMED BY THE PLAYER, THE HIGHER THE POINTS WILL BE GIVEN.       ║        \n"
+                     "        ║    7) AFTER GARNERING A TOTAL OF 2000 POINTS AT THE EASY ROUND, THE PLAYER WILL NOW        ║        \n"
+                     "        ║       MOVE TO THE AVERAGE ROUND. AFTER GARNERING A TOTAL OF 6500 POINTS, THE PLAYER        ║        \n"
+                     "        ║       WILL THEN BE ABLE TO LEVEL UP TO THE DIFFICULT ROUND. FINALLY, THE PLAYER WINS       ║        \n"
+                     "        ║       ONCE THEY ACHIEVE A TOTAL OF 17500 POINTS.                                           ║        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ╚════════════════════════════════════════════════════════════════════════════════════════════╝        \n"
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+
+char* mechanics3 =  "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                                                                                              \n"
+                     "                                          GET TO KNOW YOUR POWER-UPS                                          \n"
+                     "                                                                                                              \n"
+                     "        ╔════════════════════════════════════════════════════════════════════════════════════════════╗        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ║    THESE POWER-UPS WILL GIVE YOU THE UPPER HAND IN WINNING THE GAME. USE THEM WISELY!      ║        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ║    TIME FREEZE     - THIS POWER-UP ALLOWS THE PLYER TO PAUSE THE TIMER OF THE GAME AND     ║        \n"
+                     "        ║                      ALLOWS THE PLAYER TO ANSWER THE QUESTIONS WITH EASE.                  ║        \n"
+                     "        ║    ERASER          - THIS POWER-UP ELIMINATES ONE WRONG OPTION AMOUNG THE CHOICES.         ║        \n"
+                     "        ║    DOUBLE JEOPARDY - THIS POWER-UP DOUBLES THE PLAYER'S SCORE IF THE QUESTION IS           ║        \n"
+                     "        ║                      ANSWERED INCORRECTLY.                                                 ║        \n"
+                     "        ║    PASS            - THIS ALLOWS PLAYER TO PASS AND ANSWER THE QUESTION LATER.             ║        \n"
+                     "        ║    IMMUNITY        - THIS ALLOWS THE PLAYER TO ANSWER THE SAME QUESTION TWICE WITHOUT      ║        \n"
+                     "        ║                      LOSING A LIFE IN THE CASE OF A WRONG ANSWER.                          ║        \n"
+                     "        ║                                                                                            ║        \n"
+                     "        ╚════════════════════════════════════════════════════════════════════════════════════════════╝        \n"
+                     "                                                                                                              \n"
+                     "                                                                                                              \n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n"
+                     "                                        PRESS [SPACEBAR] TO CONTINUE.\n"
+                     "\e[0;94m══════════════════════════════════════════════════════════════════════════════════════════════════════════════\e[0m\n";
+                   
+
 
