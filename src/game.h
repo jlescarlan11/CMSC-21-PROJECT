@@ -92,7 +92,7 @@ void init_list(SLList* list); // This initializes the singly linkedlist
 char* get_item(SLList* list, int index); // This return the value based on the index
 void set_item(SLList* list, int index, char* item); // This change the value in a given index
 void insert_item(SLList* list, int index, char* item); // This add a value in the linkedlist
-void remove_item(SLList* list, int index); // This remove a value in a given index and make the value from the next index to move to the deleted index.
+void remove_tem(SLList* list, int index); // This remove a value in a given index and make the value from the next index to move to the deleted index.
 void clear_list(SLList* list); // This reset the linkedlists or reintialize it
 
 // These functions initializes the quiz from a given array, so that if we add a new value, we don't need to change its size.
@@ -122,7 +122,6 @@ void format_header2(char **buffer, int *size, const char *level, const char *cat
 void populate_list(SLList *list, int *index, Quiz *quizzes, int num_items, int current);
 
 // This is only an adds-on to make the program look appealing
-void center_item(int size);
 void center_text(char* text, int len);
 void add_spaces(int size, int max_size);
 void clear_screen();

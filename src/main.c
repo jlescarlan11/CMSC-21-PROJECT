@@ -13,6 +13,7 @@ int main() {
     Game game;
     Score* scores = NULL;
 
+
     init_contents(&game);
 
     int c_index[MAX_CATEGORIES];
@@ -24,7 +25,7 @@ int main() {
     clear_screen();
     char input = '0';
     while(1) {
-        
+    
 
         int ctr = 0;
         while (1) {

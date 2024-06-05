@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <conio.h>
 #include <ctype.h>
@@ -362,7 +363,7 @@ void add_powerup(Game* game, const Powerup* powerUp) {
 }
 
 void clear_screen() {
-    clear_screen();
+    system("cls");
 }
 
 void init_player(Game* game) {
@@ -489,7 +490,7 @@ void insert_item(SLList* list, int index, char* item) {
     list->size++;
 }
 
-void remove_item(SLList* list, int index) {
+void remove_tem(SLList* list, int index) {
     myNode* toRemove;
     if (index == 0) {
         toRemove = list->head;
@@ -672,7 +673,7 @@ int choose_category(Game* game, SLList* list, int cat_index[MAX_CATEGORIES]) {
         strcpy(item, cat3);
     }
 
-    remove_item(list, input - '1');    
+    remove_tem(list, input - '1');    
 
     for (int i = 0; i < MAX_CATEGORIES; i++) {
         if (strcmp(item, game->quizzes[cat_index[i]].category) == 0) {
