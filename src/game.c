@@ -382,7 +382,7 @@ void init_player(Game* game) {
         game->player.name[i] = toupper(game->player.name[i]);
     }
 
-    game->player.score = 16500;
+    game->player.score = 0;
     game->player.lives = 3;
 
     memset(game->clicked_powerup, 0, sizeof(game->clicked_powerup));
@@ -1056,27 +1056,44 @@ void press_continue() {
 }
 
 void format_header1(char **buffer, int *size, const char *player_name, int score, int lives) {
-    const char *livesDisplay = lives == 3 ? "❤️ ❤️ ❤️" : (lives == 2 ? "❤️ ❤️ \e[0;93m💔\e[0m" : "❤️ 💔 💔");
-    *size = snprintf(NULL, 0, "%*sPLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
-                     4, "", player_name, 
-                     49 - 4 - (int)strlen(player_name) - 14, "", 
-                     score, 
-                     42 - 9 - 4, "", 
-                     livesDisplay) + 1; // +1 for null terminator
+    const char *livesDisplay;
+    switch (lives) {
+        case 3:
+            livesDisplay = "❤️  ❤️  ❤️";
+            break;
+        case 2:
+            livesDisplay = "❤️  ❤️  💔";
+            break;
+        case 1:
+        default:
+            livesDisplay = "❤️  💔 💔";
+            break;
+    }
 
+    // Compute the size of the buffer needed including the null terminator
+    *size = snprintf(NULL, 0, "    PLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
+                     player_name,
+                     49 - 4 - (int)strlen(player_name) - 14, "",
+                     score,
+                     42 - 9 - 4, "",
+                     livesDisplay) + 1;
+
+    // Reallocate the buffer to the required size
     *buffer = (char *)realloc(*buffer, *size);
     if (*buffer == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(1);
     }
 
-    snprintf(*buffer, *size, "%*sPLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
-             4, "", player_name, 
-             49 - 4 - (int)strlen(player_name) - 14, "", 
-             score, 
-             42 - 9 - 4, "", 
+    // Write the formatted string to the buffer
+    snprintf(*buffer, *size, "    PLAYER NAME : %s%*sSCORE : %04d%*sLIVES : %s",
+             player_name,
+             49 - 4 - (int)strlen(player_name) - 14, "",
+             score,
+             42 - 9 - 4, "",
              livesDisplay);
 }
+
 void format_header2(char **buffer, int *size, const char *level, const char *category, int time_left, int question_number) {
     *size = snprintf(NULL, 0, "%*s%s : %s%*sTIMER : %02d%*sQUESTION : %02d%*s", 
                      4, "", 

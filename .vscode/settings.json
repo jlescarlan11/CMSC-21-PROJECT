@@ -8,6 +8,7 @@
     "iostream": "cpp",
     "ostream": "cpp",
     "game.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "system_error": "c"
   }
 }
