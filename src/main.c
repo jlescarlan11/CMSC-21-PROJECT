@@ -13,7 +13,6 @@ int main() {
     Game game;
     Score* scores = NULL;
 
-
     init_contents(&game);
 
     int c_index[MAX_CATEGORIES];
@@ -31,9 +30,7 @@ int main() {
         while (1) {
             clear_screen();
             if ((ctr % 28) == 0) {
-                PlaySound(TEXT("assets/intro.wav"), 
-                        NULL, 
-                        SND_FILENAME | SND_ASYNC);
+                PlaySound(TEXT("assets/intro.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
                 ctr = 1;
             }
@@ -53,7 +50,8 @@ int main() {
         }
     
         int pow_index[MAX_POWERUPS];
-        init_index(pow_index, MAX_POWERUPS, TOTAL_POWERUPS, 1);
+        init_index(pow_index, MAX_POWERUPS, 
+                    TOTAL_POWERUPS, 1);
 
 
         switch (input)
