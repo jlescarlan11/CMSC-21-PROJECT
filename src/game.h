@@ -2,8 +2,6 @@
 
 #include <stdbool.h>
 
-
-
 // Define constants for the game
 #define MAX_QUESTIONS 10
 #define TOTAL_QUESTIONS 10

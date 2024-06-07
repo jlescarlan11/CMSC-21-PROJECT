@@ -1059,14 +1059,14 @@ void format_header1(char **buffer, int *size, const char *player_name, int score
     const char *livesDisplay;
     switch (lives) {
         case 3:
-            livesDisplay = "❤️  ❤️  ❤️";
+            livesDisplay = "❤️ ❤️ ❤️";
             break;
         case 2:
-            livesDisplay = "❤️  ❤️  💔";
+            livesDisplay = "❤️ ❤️ 💔";
             break;
         case 1:
         default:
-            livesDisplay = "❤️  💔 💔";
+            livesDisplay = "❤️ 💔 💔";
             break;
     }
 
@@ -1348,7 +1348,7 @@ char* welcome_screen6 =     "\e[0;94m══════════════�
                             "                       ╔═THE ONE WHO CAN'T BE WRONG══════════════════════════════════╗\n"
                             "                       ║                                                             ║\n"
                             "                       ║           YOU ARE NOW READY TO TAKE MY CHALLENGE.           ║\n"
-                            "                       ║   UNLOCK YOUR POTENTIAL AND BEAT ALL OF MY TOP 3 SCORERS.   ║\n"
+                            "                       ║   UNLOCK YOUR POTENTIAL AND BEAT ALL OF MY TOP 5 SCORERS.   ║\n"
                             "                       ║                          GOODLUCK!                          ║\n"
                             "                       ║                                                             ║\n"
                             "                       ╚═════════════════════════════════════════════════════════════╝\n"

@@ -105,11 +105,7 @@ int main() {
 
                 init_difficulty(&game);
 
-                PlaySound(TEXT("assets/init.wav"), 
-                                NULL, 
-                                SND_FILENAME | SND_ASYNC);
-
-
+                PlaySound(TEXT("assets/init.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 
                 if ((game.difficulty == EASY) && (!c_flg1)) {
                     init_index(c_index, MAX_CATEGORIES, TOTAL_CATEGORIES, 10);
@@ -125,22 +121,13 @@ int main() {
                     init_index(c_index, MAX_CATEGORIES, TOTAL_CATEGORIES, 10);
                     populate_list(&myList, c_index, game.quizzes, 5, 0);
                     c_flg3 = 1;
-                }
-
-                
-                
-                
+                }    
                 
                 int cat_index = choose_category(&game, &myList, c_index);
 
                 mark_category_used(cat_index, &game);
 
-                play_quiz(&game, cat_index, 
-                            que_index, 
-                            pow_index, 
-                            used_powerup);
-
-                
+                play_quiz(&game, cat_index, que_index, pow_index, used_powerup);
 
                 if (game.player.lives == 0) {
                     write_score(game.player.name, game.player.score);
@@ -225,9 +212,7 @@ int main() {
 
 
             case '3':
-                PlaySound(TEXT("assets/leaderboard.wav"), 
-                            NULL, 
-                            SND_FILENAME | SND_ASYNC);
+                PlaySound(TEXT("assets/leaderboard.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 clear_screen();
 
                 int num_scores = 0;
